@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>خواص أسماء الله الحسنى</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #FAF6EE;
+    --paper: #FFFFFF;
+    --ink: #3A2E1F;
+    --ink-soft: #7A6E5C;
+    --line: #E8DFC8;
+    --accent: #8B6B3D;
+    --accent-soft: #B9986A;
+    --green: #4C6B4F;
+    --rose: #9C4A3D;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'Tajawal',sans-serif;
+    min-height:100vh;
+    -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none; user-select:none;
+    -webkit-touch-callout:none;
+  }
+  input, textarea{
+    -webkit-user-select:text; -moz-user-select:text; -ms-user-select:text; user-select:text;
+  }
+  img{ -webkit-user-drag:none; user-drag:none; pointer-events:none; }
+  .wrap{max-width:680px; margin:0 auto; padding:32px 20px 80px;}
+
+  /* ===== رأس بسيط ===== */
+  header{text-align:center; margin-bottom:28px;}
+  h1{
+    font-family:'Amiri',serif; font-weight:700; font-size:30px;
+    margin:0 0 6px; color:var(--ink);
+  }
+  .sub{color:var(--ink-soft); font-size:14px; margin:0;}
+  .source-line{color:var(--accent); font-size:12px; margin:8px 0 0; line-height:1.7;}
+  nav{margin-top:16px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;}
+  nav button{
+    background:none; border:1px solid var(--line); border-radius:20px;
+    padding:7px 16px; font-family:'Tajawal',sans-serif; font-size:13px;
+    color:var(--accent); cursor:pointer; transition:background .15s;
+  }
+  nav button:hover{background:var(--paper);}
+  nav button.active{background:var(--accent); color:#fff; border-color:var(--accent);}
+
+  /* ===== بحث ===== */
+  .search-area{margin-bottom:18px;}
+  #searchInput{
+    width:100%; padding:14px 18px; border-radius:12px;
+    border:1px solid var(--line); background:var(--paper);
+    font-family:'Tajawal',sans-serif; font-size:17px; color:var(--ink);
+    outline:none; text-align:center;
+  }
+  #searchInput:focus{border-color:var(--accent-soft);}
+  #searchInput::placeholder{color:#B8AC93;}
+
+  .back-row{margin-bottom:14px;}
+  .back-row button{
+    background:none; border:none; color:var(--accent); font-family:'Tajawal',sans-serif;
+    font-size:13.5px; cursor:pointer; padding:4px 0;
+  }
+  .back-row button:hover{text-decoration:underline;}
+
+  /* ===== قائمة كل الأسماء (جدول كبير من المربعات) ===== */
+  .list-wrap{margin-top:14px;}
+  .list-count{font-size:12.5px; color:var(--ink-soft); margin-bottom:10px; text-align:center;}
+  .name-grid{
+    display:grid; grid-template-columns:repeat(5, 1fr); gap:6px;
+    background:var(--paper); border:1px solid var(--line); border-radius:14px;
+    padding:10px;
+  }
+  .name-chip{
+    background:var(--bg); border:1px solid var(--line); border-radius:8px;
+    padding:10px 4px; text-align:center; cursor:pointer; transition:background .12s, border-color .12s;
+  }
+  .name-chip:hover{background:#F0E8D4; border-color:var(--accent-soft);}
+  .name-chip .chip-name{font-family:'Amiri',serif; font-size:14px; font-weight:700; color:var(--ink); display:block; line-height:1.3;}
+  .name-chip .chip-no{font-size:9px; color:#B8AC93; display:block; margin-top:2px;}
+  @media (max-width:560px){
+    .name-grid{grid-template-columns:repeat(4, 1fr);}
+  }
+  @media (max-width:420px){
+    .name-grid{grid-template-columns:repeat(3, 1fr); gap:5px;}
+    .name-chip{padding:9px 3px;}
+    .name-chip .chip-name{font-size:13px;}
+  }
+
+  /* ===== البطاقة ===== */
+  .card{
+    background:var(--paper); border:1px solid var(--line); border-radius:16px;
+    padding:30px 26px; margin-top:8px;
+  }
+  .card-top{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;}
+  .card-name{font-family:'Amiri',serif; font-size:36px; font-weight:700; color:var(--ink);}
+  .card-no{font-size:13px; color:var(--ink-soft);}
+  .card-khasiyya{font-size:16px; color:var(--accent); margin-bottom:22px; line-height:1.7;}
+
+  .field{margin-bottom:16px;}
+  .field-label{font-size:12px; color:var(--ink-soft); margin-bottom:3px; font-weight:700;}
+  .field-value{font-size:15px; line-height:1.85; color:var(--ink);}
+
+  .tags{display:flex; gap:8px; flex-wrap:wrap; margin:18px 0; padding-top:18px; border-top:1px solid var(--line);}
+  .tag{font-size:11.5px; padding:4px 11px; border-radius:20px; background:var(--bg); color:var(--ink-soft);}
+  .tag.warn{background:#FBEAE6; color:var(--rose);}
+  .tag.good{background:#E9F0EA; color:var(--green);}
+
+  .box{
+    margin-top:18px; padding:16px 18px; border-radius:10px; font-size:14px; line-height:1.85;
+  }
+  .box-story{background:#FBF6E8; color:#6B5530;}
+  .box-compare{background:#EDF2F6; color:#3A526B;}
+  .box-compare.conflict{background:#FBEAE6; color:#7A3B30;}
+  .box-title{font-weight:700; font-size:12.5px; margin-bottom:6px; display:block;}
+
+  /* ===== التنقل ===== */
+  .pager{display:flex; justify-content:space-between; gap:12px; margin-top:16px;}
+  .pager button{
+    flex:1; padding:13px; border-radius:10px; border:1px solid var(--line);
+    background:var(--paper); font-family:'Tajawal',sans-serif; font-size:14px;
+    color:var(--ink); cursor:pointer; transition:background .15s;
+  }
+  .pager button:hover{background:var(--bg);}
+  .pager button:disabled{opacity:0.35; cursor:default;}
+
+  .empty-state{
+    text-align:center; color:var(--ink-soft); font-size:14px; padding:60px 20px;
+  }
+
+  /* ===== صفحات إضافية ===== */
+  .section-title{
+    font-family:'Amiri',serif; font-size:24px; font-weight:700; color:var(--ink);
+    margin:0 0 18px; text-align:center;
+  }
+  .view-card{
+    background:var(--paper); border:1px solid var(--line); border-radius:12px;
+    padding:18px 20px; margin-bottom:12px;
+  }
+  .view-title{font-family:'Amiri',serif; font-size:18px; font-weight:700; color:var(--accent); margin-bottom:6px;}
+  .view-meta{font-size:12.5px; color:var(--ink-soft); margin-bottom:8px;}
+  .view-note{font-size:14px; line-height:1.8; color:var(--ink);}
+
+  .about-card{
+    background:var(--paper); border:1px solid var(--line); border-radius:14px;
+    padding:22px 24px; margin-bottom:16px;
+  }
+  .about-card p{font-size:14.5px; line-height:2; color:var(--ink); margin:0 0 14px;}
+  .about-card p:last-child{margin-bottom:0;}
+
+  table.simple{width:100%; border-collapse:collapse; background:var(--paper); border-radius:12px; overflow:hidden; border:1px solid var(--line);}
+  table.simple th{background:var(--accent); color:#fff; font-size:12.5px; padding:10px; text-align:right; font-weight:700;}
+  table.simple td{padding:10px; font-size:13.5px; border-top:1px solid var(--line);}
+  table.simple tr:nth-child(even) td{background:var(--bg);}
+
+  /* ===== الأوراد اليومية ===== */
+  .time-group{margin-bottom:20px;}
+  .time-label{
+    font-family:'Amiri',serif; font-size:16px; font-weight:700; color:var(--accent);
+    margin-bottom:8px; padding-right:4px; border-right:3px solid var(--accent-soft); padding-right:10px;
+  }
+  .wird-row{
+    background:var(--paper); border:1px solid var(--line); border-radius:10px;
+    padding:12px 16px; margin-bottom:8px; display:flex; align-items:center; gap:14px;
+  }
+  .wird-name{font-family:'Amiri',serif; font-size:17px; font-weight:700; color:var(--ink); min-width:80px;}
+  .wird-mid{flex:1;}
+  .wird-count{font-size:13px; color:var(--accent); font-weight:700;}
+  .wird-note{font-size:12px; color:var(--ink-soft); margin-top:2px; line-height:1.6;}
+
+  /* ===== صفحة الأغراض ===== */
+  .purpose-grid{
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:8px;
+    background:var(--paper); border:1px solid var(--line); border-radius:14px;
+    padding:10px;
+  }
+  .purpose-tile{
+    background:var(--bg); border:1px solid var(--line); border-radius:10px;
+    padding:16px 8px; text-align:center; cursor:pointer;
+    transition:background .12s, border-color .12s;
+  }
+  .purpose-tile:hover{background:#F0E8D4; border-color:var(--accent-soft);}
+  .purpose-icon{display:flex; justify-content:center; margin-bottom:6px; color:var(--accent);}
+  .purpose-icon svg{width:22px; height:22px;}
+  .purpose-title{font-family:'Amiri',serif; font-size:14px; font-weight:700; color:var(--ink); display:block; line-height:1.4;}
+  .purpose-count{font-size:10.5px; color:var(--ink-soft); display:block; margin-top:4px;}
+  @media (max-width:560px){
+    .purpose-grid{grid-template-columns:repeat(2, 1fr);}
+  }
+
+  .purpose-detail-head{
+    display:flex; align-items:center; gap:12px; margin-bottom:18px;
+  }
+  .purpose-detail-icon{color:var(--accent); flex-shrink:0;}
+  .purpose-detail-icon svg{width:28px; height:28px;}
+  .purpose-detail-title{font-family:'Amiri',serif; font-size:22px; font-weight:700; color:var(--ink);}
+  .purpose-detail-count{font-size:12.5px; color:var(--ink-soft);}
+
+  .purpose-name-card{
+    background:var(--paper); border:1px solid var(--line); border-radius:12px;
+    padding:18px 20px; margin-bottom:12px;
+  }
+  .purpose-name-top{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;}
+  .purpose-name-title{font-family:'Amiri',serif; font-size:22px; font-weight:700; color:var(--ink);}
+  .purpose-name-no{font-size:12px; color:var(--ink-soft);}
+  .purpose-name-khasiyya{font-size:14.5px; color:var(--accent); margin-bottom:14px; line-height:1.7;}
+
+  .hidden{display:none !important;}
+
+  footer{text-align:center; margin-top:40px; font-size:12px; color:var(--ink-soft);}
+
+  @media (max-width:480px){
+    .card{padding:22px 18px;}
+    .card-name{font-size:28px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>خواص أسماء الله الحسنى</h1>
+    <p class="sub">١٠١ اسماً — ابحث، أو تصفّح اسماً اسماً</p>
+    <p class="source-line">المصادر الثلاثة جُمعت من مراجع أهل السنة والجماعة حصراً — هذا تجميع للمراجعة وليس فتوى</p>
+    <nav>
+      <button id="navTable" class="active">الجدول</button>
+      <button id="navDaily">الأوراد اليومية</button>
+      <button id="navPurposes">الأغراض</button>
+      <button id="navFavorites" class="hidden">المفضّلة <span id="favCountBadge" class="fav-count-badge hidden">0</span></button>
+      <button id="navGreatest">الاسم الأعظم</button>
+      <button id="navThirteen">الأسماء الثلاثة عشر</button>
+      <button id="navAbout">عن المشروع</button>
+    </nav>
+  </header>
+
+  <!-- ===== صفحة الجدول ===== -->
+  <div id="viewTable">
+    <div class="search-area">
+      <input type="text" id="searchInput" placeholder="فلترة سريعة (اختياري)… أو اختر اسماً من القائمة بالأسفل">
+    </div>
+
+    <div id="cardArea"></div>
+
+    <div class="pager hidden" id="pager">
+      <button id="prevBtn">→ السابق</button>
+      <button id="nextBtn">التالي ←</button>
+    </div>
+
+    <div class="list-wrap" id="listWrap">
+      <div class="list-count">كل الأسماء (١٠١) — اضغط أي اسم لعرض تفاصيله</div>
+      <div class="name-grid" id="nameGrid"></div>
+    </div>
+  </div>
+
+  <!-- ===== صفحة الأوراد اليومية ===== -->
+  <div id="viewDaily" class="hidden">
+    <h2 class="section-title">الأوراد اليومية</h2>
+    <p style="font-size:13.5px; color:var(--ink-soft); line-height:1.8; margin-bottom:18px;" id="dailyNoteText"></p>
+    <div id="dailyList"></div>
+  </div>
+
+  <!-- ===== صفحة الأغراض ===== -->
+  <div id="viewPurposes" class="hidden">
+    <div id="purposesGridArea">
+      <h2 class="section-title">الأغراض</h2>
+      <p style="font-size:13.5px; color:var(--ink-soft); line-height:1.8; margin-bottom:18px;" id="purposesNoteText"></p>
+      <div class="purpose-grid" id="purposeGrid"></div>
+    </div>
+    <div id="purposeDetailArea" class="hidden"></div>
+  </div>
+
+  <!-- ===== صفحة الاسم الأعظم ===== -->
+  <div id="viewGreatest" class="hidden">
+    <h2 class="section-title">اسم الله الأعظم</h2>
+    <p style="font-size:14px; color:var(--ink-soft); line-height:1.8; margin-bottom:18px;">اختلف العلماء في تحديده، وهذه خمسة أقوال وردت في أحد المصادر:</p>
+    <div id="greatestViews"></div>
+    <div class="view-card" style="margin-top:20px;">
+      <div class="view-title" id="storyTitle"></div>
+      <div class="view-note" id="storyText" style="margin-bottom:12px;"></div>
+      <div class="box box-story"><span class="box-title">العبرة</span><span id="storyMoral"></span></div>
+    </div>
+    <p style="font-size:13px; color:var(--ink-soft); line-height:1.8; margin-top:16px;" id="closingNote"></p>
+  </div>
+
+  <!-- ===== صفحة الأسماء الثلاثة عشر ===== -->
+  <div id="viewThirteen" class="hidden">
+    <h2 class="section-title">الأسماء الثلاثة عشر</h2>
+    <p style="font-size:13.5px; color:var(--ink-soft); line-height:1.8; margin-bottom:14px;" id="thirteenNote"></p>
+    <table class="simple">
+      <thead><tr><th>#</th><th>المجموعة</th><th>الاسم</th><th>المعنى</th></tr></thead>
+      <tbody id="thirteenBody"></tbody>
+    </table>
+  </div>
+
+  <!-- ===== صفحة عن المشروع ===== -->
+  <div id="viewAbout" class="hidden">
+    <h2 class="section-title">عن هذا المشروع</h2>
+
+    <div class="about-card">
+      <p>لأربعة عشر قرناً، توارث المسلمون عناية حيّة بأسماء الله الحسنى — لا كمعلومة تُحفظ، بل كممارسة يومية، وباباً للدعاء، ومرجعاً يلجأ إليه الناس في أفراحهم وكروبهم على حدّ سواء. كان حفظ هذه الأسماء وفهم خواصها جزءاً من النسيج العادي للحياة الدينية، يتناقله العلماء والعامة معاً.</p>
+
+      <p>هذه العناية، في جيلنا والأجيال التي تليه، تكاد تكون اندثرت. ضاع كثير من هذا التراث بين أمرين: إما النسيان الكامل، حتى صار بعض الناس ينظر إلى هذا الباب من العلم وكأنه أساطير لا أصل لها ولا قيمة، أو الاستحواذ عليه من قبل دعاة "علوم الطاقة" الشرقية، الذين يأخذون الاسم ويُفرغونه من عقيدته ويُلبسونه ثوباً غريباً عن أصله، فيُساء توظيفه بدل أن يُصان.</p>
+
+      <p>هذا خطأ، وهذه فجوة معيبة تستحق أن تُسدّ بما يليق بها — لا بإعادة إنتاج الخرافة، ولا بالتنكّر للتراث خجلاً منه، بل بنقله كما هو: منسوباً لمصادره، موثّقاً بدقة، وواضحاً في حدود ما يقوله النص وما لا يقوله.</p>
+
+      <p>من هنا كان هذا المشروع: تجميع ١٠١ اسماً من الأسماء الحسنى وخواصها كما وردت في ثلاثة مصادر من تراث أهل السنة والجماعة، مع مقارنة دقيقة بين الروايات حيث اختلفت، وتوثيق صريح لكل تعارض رقمي بدل إخفائه أو الترجيح فيه بلا دليل. الهدف ليس إصدار فتوى ولا الترويج لممارسة بعينها، بل إتاحة هذا التراث للقراءة والتصفح بصورة أمينة، تُعيد إليه بعض ما استحقّه من عناية، وتضعه في متناول من يبحث عنه دون أن يضطر للاختيار بين النسيان أو التشويه.</p>
+    </div>
+
+    <div class="about-card">
+      <div class="purpose-name-top" style="margin-bottom:8px;">
+        <span class="purpose-name-title" style="font-size:18px;">المصادر الثلاثة</span>
+      </div>
+      <p style="font-size:13.5px; line-height:1.9; color:var(--ink);">
+        <b>المصدر الأول:</b> «خواص أسماء الله الحسنى للتداوي وقضاء الحاجات» — السيد محمد بن علوي العيدروس. الأساس الذي بُني عليه الجدول الرئيسي (٩٩ اسماً).<br><br>
+        <b>المصدر الثاني:</b> مختصر «المقصد الأسنى في شرح أسماء الله الحسنى» — الشيخ أحمد زروق. استُخدم لسدّ موضعين فارغين عند العيدروس، ولتوثيق الفروقات حيث اختلفت الروايتان.<br><br>
+        <b>المصدر الثالث:</b> كتاب شرحي-وعظي (غير مُسمّى مؤلفه في النسخة المتاحة)، استُخرجت منه القصص والمواعظ المرتبطة بكل اسم، وقسما الاسم الأعظم والأسماء الثلاثة عشر، إضافة إلى مقارنات رقمية تكميلية.
+      </p>
+    </div>
+  </div>
+
+  <footer>
+    <p>جُمعت المصادر من مراجع أهل السنة والجماعة — للتصفح والمراجعة، وليست فتوى دينية</p>
+    <img src="https://api.visitorbadge.io/api/visitors?path=khawas-asma-allah-husna&label=الزيارات&countColor=%238B6B3D&style=flat-square" alt="عداد الزيارات" loading="lazy" style="margin-top:8px; height:20px; pointer-events:none;">
+  </footer>
+</div>
+
+
+<script id="data-main" type="application/json">[{"no":1,"name":"الله","khasiyya":"زيادة اليقين وتيسير المقاصد المحمودة","wird":"1000 مرة يومياً (لكمال اليقين)، أو 200 مرة يوم الجمعة (لتيسير المطلوب)، أو 100 مرة بعد الصبح (لانكشاف الأسرار)، أو 100 مرة بعد كل صلاة (لإزالة الغفلة)","ritual":"حرز/تعليق","ritualDetail":"يُرسم في مربع ويُحمل لصاحب الحمى البلغمية؛ وله شكل/صورة خاصة","time":"يوم الجمعة قبل الصلاة (للذكر 200 مرة) / بعد صلاة الصبح (للذكر 100 مرة لانكشاف الأسرار) / بعد كل صلاة (للذكر 100 مرة لإزالة الغفلة) / مطلق (للذكر اليومي 1000 مرة)","freq":"يومي","certainty":"عدة أعداد بديلة (حسب الغرض)","source":"عيدروس","story":"حوار الراهب مع الإمام أبي حنيفة: سأله 'ماذا قبل الله؟' و'في أي جهة وجهه؟' فأجابه بالقياس على العدد والنور حتى أفحمه.","source3note":"يطابق جزئياً: عندنا 200 مرة يوم الجمعة أيضاً","source3conflict":false},{"no":2,"name":"الرحمن","khasiyya":"حذف المكروه عن ذاكره وحامله","wird":"100 مرة بعد كل صلاة","ritual":"كتابة","ritualDetail":"يُكتب بزعفران ومسك ويُدفن في بيت صاحب الأخلاق الشرسة","time":"بعد الصلاة","freq":"يومي","certainty":"عدد محدد واحد","source":"عيدروس","story":"","source3note":"إضافة جديدة: وِرد مركّب (الله+الرحمن) لعلاج النسيان، 10 مرات، غير موجود عندنا","source3conflict":false},{"no":3,"name":"الرحيم","khasiyya":"رقة القلب والرحمة للمخلوقين","wird":"100 مرة يومياً","ritual":"كتابة","ritualDetail":"يُكتب ويُحلّ في ماء ويُصبّ في أصل شجرة","time":"غير محدد","freq":"يومي","certainty":"عدد محدد واحد","source":"عيدروس","story":"","source3note":"يتفق مع التصنيف عندنا تقريباً (عندنا 100 مرة من العيدروس، فرق طفيف)","source3conflict":false},{"no":4,"name":"الملك","khasiyya":"صفاء القلب وحصول الغنى والإمرة","wird":"100 مرة وقت الزوال (لصفاء القلب)، أو 121 مرة بعد الفجر (للغنى)، أو 99 مرة (للعلم والمعرفة)","ritual":"ذكر لفظي","ritualDetail":"-","time":"وقت الزوال (للذكر 100 مرة) / بعد صلاة الفجر (للذكر 121 مرة)","freq":"يومي","certainty":"عدة أعداد بديلة (حسب الغرض)","source":"عيدروس","story":"","source3note":"","source3conflict":false},{"no":5,"name":"القدوس","khasiyya":"فتح باب العبادة والسلامة من الآفات","wird":"بعدد حساب الجُمَّل الكبير (النص لا يحدد صراحة قيمة الكلمة؛ حساب كلمة \"قدّوس\" المجردة ≈ 170، لكن هذا تقدير وليس نصاً صريحاً)، أو 1000 مرة في خلوة 40 يوماً، أو 100 مرة عند الزوال، أو 1000 مرة آخر الليل","ritual":"كتابة","ritualDetail":"يُكتب \"سبّوح قدّوس\" على خبز إثر صلاة الجمعة ويُؤكل","time":"إثر صلاة الجمعة (للكتابة على الخبز) / عند الزوال (للذكر اليومي 100 مرة) / آخر الليل (للذكر 1000 مرة لإزالة البلاء)","freq":"يومي / موسمي (الأربعون يوماً)","certainty":"عدة أعداد بديلة (حسب الغرض)","source":"عيدروس","story":"المؤلف يروي رؤيا له ولآخرين كانوا يظنون أنهم بلغوا مقاماً عظيماً في الفهم، فرأى في المنام من يقول لهم: «تعالى الله عما كنتم تقولون علواً كبيراً».","source3note":"","source3conflict":false},{"no":6,"name":"السلام","khasiyya":"صرف المصائب والآلام","wird":"121 مرة، أو 131 مرة","ritual":"حرز/تعليق","ritualDetail":"يُكتب الاسم في ورقة وتُحمل للسلامة في البر والبحر","time":"غير محدد","freq":"عند الحاجة","certainty":"عدة أعداد بديلة (حسب الغرض)","source":"عيدروس","story":"قصة إبراهيم بن أدهم: نزع حب الفواكه من قلبه إلا الرمان، فمر برجل مريض تنهش الزنابير لحمه فرد سلامه باسمه دون معرفة سابقة، ونصحه بالدعاء لا الشكوى.","source3note":"","source3conflict":false},{"no":7,"name":"المؤمن","khasiyya":"وجود التأمين وقوة الإيمان","wird":"36 مرة (عيدروس) / 136 مرة (زروق، الأرجح) — كان تعارضاً، رُجِّح زروق حسابياً","ritual":"مركّب (ذكر+حمل)","ritualDetail":"يُقرأ أو يُحمل معه","time":"عند الخوف","freq":"عند الحاجة","certainty":"تعارض مُرجَّح بدليل خارجي","source":"عيدروس+زروق (مُرجَّح)","story":"","source3note":"","source3conflict":false},{"no":8,"name":"المهيمن","khasiyya":"شرف الباطن وعلو الهمة","wird":"100 مرة بعد الغسل والصلاة","ritual":"ذكر لفظي","ritualDetail":"في خلوة وجمع خاطر","time":"بعد الغسل والصلاة","freq":"عند الحاجة","certainty":"عدد محدد واحد","source":"عيدروس","story":"","source3note":"يطابق تقريباً: عندنا 100 مرة بعد الغسل والصلاة","source3conflict":false},{"no":9,"name":"العزيز","khasiyya":"وجود الغنى والعز","wird":"40 مرة يومياً لمدة 40 يوماً، أو 1000 مرة لمدة 7 أيام، أو 70 مرة في وجه العسكر","ritual":"مركّب (ذكر+إشارة)","ritualDetail":"يُشار باليد للعسكر عند الذكر","time":"غير محدد","freq":"موسمي (40 يوماً / 7 أيام)","certainty":"عدة أعداد بديلة (حسب الغرض)","source":"عيدروس","story":"قصة الشبلي: سأل عن الاسم الذي يجري على لسان رجل غني، فقيل له 'الوهاب'، فقال: لهذا كثر ماله (مكررة أيضاً عند الوهاب).","source3note":"يطابق: عندنا أيضاً 7 أيام متواليات (1000 مرة)","source3conflict":false},{"no":10,"name":"الجبار","khasiyya":"الحفظ من ظلم الجبارين والمعتدين","wird":"21 مرة بعد المسبعات العشر","ritual":"ذكر لفظي","ritualDetail":"-","time":"صباحاً ومساءً","freq":"يومي","certainty":"عدد محدد واحد","source":"عيدروس","story":"","source3note":"","source3conflict":false},{"no":11,"name":"المتكبر","khasiyya":"الجلالة وظهور الخير والبركة","wird":"10 مرات ليلة الزواج","ritual":"مركّب (ذكر+فعل)","ritualDetail":"يُذكر قبل الجماع لرزق ولد صالح؛ ويُكثر الطبيب ذكره لنجاح المداواة","time":"ليلة الدخول بالزوجة","freq":"مرة واحدة/مناسبة محددة","certainty":"عدد محدد واحد","source":"عيدروس","story":"حادثة شخصية للمؤلف: ذكر الاسم فوجد نفسه جالساً بتعاظم (رجلاً على رجل) فتنبه وجلس متأدباً؛ وحوار أبي زيد البسطامي مع ربه عن التقرب بـ'الذي ليس فيك'.","source3note":"","source3conflict":false},{"no":12,"name":"الخالق","khasiyya":"تنوير القلب والوجه","wird":"5000 مرة لرجوع الضائع والغائب","ritual":"ذكر لفظي","ritualDetail":"-","time":"جوف الليل","freq":"عند الحاجة","certainty":"عدد محدد واحد","source":"عيدروس","story":"","source3note":"إضافة: 'يقرره عند النوم حتى ينام' — وقت مختلف عن جوف الليل عندنا","source3conflict":false},{"no":13,"name":"البارئ","khasiyya":"السلامة من الآفات حتى في القبر","wird":"100 مرة يومياً لمدة 7 أيام","ritual":"حرز/تعليق","ritualDetail":"يُكتب في لوح من تبر وزفت ويُعلَّق على المجنون","time":"غير محدد","freq":"موسمي (7 أيام)","certainty":"عدد محدد واحد","source":"عيدروس","story":"","source3note":"","source3conflict":false},{"no":14,"name":"المصور","khasiyya":"الإعانة على الصنائع العجيبة وزوال العقم","wird":"21 مرة يومياً لمدة 7 أيام","ritual":"مركّب (ذكر+صوم)","ritualDetail":"تذكره العاقر وهي صائمة، والذكر يكون في الفترة بين الغروب وموعد إفطارها (أي قبيل الإفطار مباشرة)","time":"بين الغروب والإفطار (أثناء الصوم اليومي)","freq":"موسمي (7 أيام)","certainty":"عدد محدد واحد","source":"عيدروس","story":"","source3note":"إضافة معنوية: ربطه بأرباب الصناعات والفنون، غير موجود عندنا","source3conflict":false},{"no":15,"name":"الغفار","khasiyya":"وجود المغفرة","wird":"100 مرة","ritual":"ذكر لفظي","ritualDetail":"-","time":"إثر صلاة الجمعة","freq":"أسبوعي","certainty":"عدد محدد واحد","source":"عيدروس","story":"قصة عيسى عليه السلام والحواريين مع الكلب الميت العفن: مرّوا عليه فقالوا 'ما أنتن هذه الجيفة' فقال عيسى: 'ما أحسن بياض أسنانه' تنبيهاً لذكر المحاسن لا المعايب.","source3note":"مشابه: عندنا أيضاً ورد متعلق بالاستغفار","source3conflict":false},{"no":16,"name":"القهار","khasiyya":"إذهاب حب الدنيا وإهلاك الظالم","wird":"100 مرة (لإهلاك الظالم، بصيغة \"يا جبار يا قهار يا ذا البطش الشديد\")","ritual":"مركّب (ذكر+كتابة)","ritualDetail":"يُكتب على جام صيني لحل المعقود، وعلى ثوب الحرب لقهر الأعداء","time":"طلوع الشمس أو جوف الليل (وقتان بديلان لنفس ذكر إهلاك الظالم — يُختار أحدهما)","freq":"عند الحاجة","certainty":"عدد محدد واحد","source":"عيدروس+زروق","story":"قصة موسى وداود: أوحى الله لداود 'إن سلمت لي فيما أريد كفيتك ما تريد، وإن لم تسلم أتعبتك فيما تريد ولا يكون لك إلا ما أريد'.","source3note":"","source3conflict":false},{"no":17,"name":"الوهاب","khasiyya":"الغنى والهيبة والقبول في القلوب","wird":"المداومة عليه في السجود (للغنى والهيبة)، أو 7 مرات مع آية مخصوصة عقب كل صلاة (لحفظ الإيمان)","ritual":"ذكر لفظي","ritualDetail":"-","time":"في سجود صلاة الضحى الأخير (للمداومة على الذكر) / عقب كل صلاة (للذكر 7 مرات مع الآية)","freq":"يومي","certainty":"عدة أعداد بديلة (حسب الغرض)","source":"عيدروس","story":"قصة الشبلي مع أبي علي الثقفي: الاسم الذي يجري على لسانه هو 'الوهاب'، فقال الشبلي: لهذا كثر ماله.","source3note":"القصة نفسها موجودة عندنا","source3conflict":false},{"no":18,"name":"الرزاق","khasiyya":"سعة الرزق وقضاء الحوائج","wird":"10 مرات لكل ناحية من البيت (لسعة الرزق)، أو 17 مرة (لقضاء الحاجة من الملوك)، أو 20 مرة (لرزق الفهم)، أو 100 مرة (لشرح الصدر وشفاء المريض)","ritual":"ذكر لفظي","ritualDetail":"يبدأ باليمنى من ناحية القبلة","time":"قبل صلاة الفجر، في كل ناحية من البيت (للذكر 10 مرات لسعة الرزق) / على الريق (للذكر 20 مرة لرزق الفهم) / بعد صلاة الجمعة (للذكر 100 مرة لشرح الصدر) — أما الذكر 17 مرة فيكون واقفاً مقابل المطلوب دون وقت محدد","freq":"يومي","certainty":"عدة أعداد بديلة (حسب الغرض)","source":"عيدروس","story":"عدة قصص: الشبلي والغني ('سل دنياك من مولاك')؛ والجنيد مع جماعة سألوه عن طلب الرزق فقال: 'التجربة مع الله شك في الله'.","source3note":"","source3conflict":false},{"no":19,"name":"الفتاح","khasiyya":"تيسير الأمور وطهارة القلب","wird":"71 مرة","ritual":"مركّب (ذكر+وضع يد)","ritualDetail":"اليد على الصدر أثناء الذكر","time":"إثر صلاة الفجر","freq":"يومي","certainty":"عدد محدد واحد","source":"عيدروس","story":"","source3note":"يطابق وقتاً وفعلاً: عندنا أيضاً بعد الفجر مع اليد على الصدر","source3conflict":false},{"no":20,"name":"العليم","khasiyya":"تحصيل العلم والمعرفة وكشف الأسرار","wird":"100 مرة دبر كل صلاة (للكشف الإيماني)","ritual":"ذكر لفظي","ritualDetail":"صيغة النداء \"يا علام الغيوب\" حتى يغلب عليه حال","time":"دبر كل صلاة","freq":"يومي","certainty":"عدد محدد واحد","source":"عيدروس","story":"","source3note":"","source3conflict":false},{"no":21,"name":"القابض","khasiyya":"قبض النفوس والأرواح، عدم الإحساس بالجوع","wird":"لقمة يومياً لمدة 40 يوماً، أو 1000 مرة كل ليلة لمدة 3 ليالٍ (للعدو القوي)","ritual":"كتابة وأكل","ritualDetail":"يُكتب على 40 لقمة خبز ويُؤكل لقمة كل يوم","time":"غير محدد","freq":"موسمي (40 يوماً / 3 ليالٍ)","certainty":"عدة أعداد بديلة (حسب الغرض)","source":"عيدروس","story":"تنبيه أخلاقي من المؤلف: لا يُستخدم هذا الاسم للانتقام رغم ذكر خاصيته في إهلاك الظالم، 'فليس من شعارنا الانتقام، فالعفو من شيم الكرام'.","source3note":"","source3conflict":false},{"no":22,"name":"الباسط","khasiyya":"البسط في الرزق","wird":"10 مرات","ritual":"مركّب (ذكر+رفع يدين)","ritualDetail":"رفع اليدين إلى السماء ثم مسح الوجه","time":"أثر صلاة الضحى","freq":"يومي","certainty":"عدد محدد واحد","source":"عيدروس","story":"قصة رجل صالح دعا بحاجة 40 سنة فلم تُجب ولم ييأس، تطبيقاً لمعنى التسليم والتفويض.","source3note":"","source3conflict":false},{"no":23,"name":"الخافض","khasiyya":"قضاء الحاجة وخفض الضغط","wird":"500 مرة","ritual":"ذكر لفظي","ritualDetail":"-","time":"غير محدد","freq":"عند الحاجة","certainty":"عدد محدد واحد","source":"عيدروس","story":"","source3note":"","source3conflict":false},{"no":24,"name":"الرافع","khasiyya":"الأمن من الظلمة والمتمردين","wird":"70 مرة","ritual":"ذكر لفظي","ritualDetail":"-","time":"غير محدد","freq":"عند الحاجة","certainty":"عدد محدد واحد","source":"عيدروس","story":"قصة عالم سُئل عن معنى 'كل يوم هو في شأن' فتحيّر، فرآه النبي ﷺ في المنام وعلّمه الجواب لسائله (الذي تبيّن أنه الخضر عليه السلام).","source3note":"","source3conflict":false},{"no":25,"name":"المعز","khasiyya":"الإعزاز والهيبة في القلوب","wird":"40 مرة","ritual":"ذكر لفظي","ritualDetail":"-","time":"بعد المغرب ليلة الاثنين أو الجمعة","freq":"أسبوعي","certainty":"عدد محدد واحد","source":"عيدروس","story":"قول علي بن الحسين: من أراد عزاً بلا عشيرة وغنى بلا مال فليخرج من ذل المعصية إلى عز الطاعة.","source3note":"","source3conflict":false},{"no":26,"name":"المذل","khasiyya":"الأمن من الظالم والحاسد","wird":"75 مرة (يتبعها دعاء في السجود)، أو 1000 مرة يومياً لمدة 7 أيام (لدفع العدو)","ritual":"مركّب (ذكر+كتابة)","ritualDetail":"يُكتب على آلة الحرب ويذكره المحارب","time":"بعد الذكر 75 مرة، يُدعى في السجود (لا وقت يومي محدد لباقي الأوراد)","freq":"موسمي (7 أيام)","certainty":"عدة أعداد بديلة (حسب الغرض)","source":"عيدروس","story":"","source3note":"فرق: عندنا 75 مرة بعد السجود، أو 1000 مرة لـ7 أيام — لا تطابق في العدد أو الوقت","source3conflict":false},{"no":27,"name":"السميع","khasiyya":"إجابة الدعاء","wird":"500 مرة","ritual":"ذكر لفظي","ritualDetail":"-","time":"يوم الخميس بعد صلاة الضحى","freq":"أسبوعي","certainty":"عدد محدد واحد","source":"عيدروس","story":"قصة رجل في الحرم كان يدعو بالفقر، فجاءه من يخبره بميراث كبير ورثه، فعلّق أحد الحاضرين: 'ما رأيت دعوة استجيبت بهذه السرعة'.","source3note":"فرق: عندنا 500 مرة يوم الخميس بعد الضحى تحديداً","source3conflict":false},{"no":28,"name":"البصير","khasiyya":"وجود التوفيق","wird":"100 مرة","ritual":"ذكر لفظي","ritualDetail":"-","time":"قبل صلاة الجمعة","freq":"أسبوعي","certainty":"عدد محدد واحد","source":"عيدروس","story":"","source3note":"يطابق: عندنا أيضاً 100 مرة (لكن عندنا 'قبل' الجمعة وهنا 'بعد')","source3conflict":false},{"no":29,"name":"الحكم","khasiyya":"جعل الباطن معدن الأسرار","wird":"مرة واحدة بوجد واعتقاد","ritual":"ذكر لفظي","ritualDetail":"على طهارة","time":"جوف الليل","freq":"عند الحاجة","certainty":"عدد محدد واحد","source":"عيدروس","story":"","source3note":"يطابق وقتاً: جوف الليل على طهارة، نفس عندنا","source3conflict":false},{"no":30,"name":"العدل","khasiyya":"تسخير القلوب وانتشار العلم","wird":"-","ritual":"كتابة وأكل","ritualDetail":"يُكتب على 20 كسرة خبز وتُؤكل ليلة الجمعة","time":"ليلة الجمعة","freq":"أسبوعي","certainty":"بلا عدد محدد (فعل/كتابة فقط)","source":"عيدروس","story":"","source3note":"إضافة: عدد جديد (92) غير موجود عندنا إطلاقاً (عندنا بلا عدد)","source3conflict":false},{"no":31,"name":"اللطيف","khasiyya":"دفع الآلام، جلب الرزق، كشف العلوم، عقد الألسن، تفريج الكروب","wird":"بعدد حساب الجُمَّل الكبير (يطابق 129 مرة المذكورة صراحة لكل من الأغراض الأربعة)، أو 1000 مرة (لقضاء الحاجة)، أو 100 مرة (عقيب الوضوء)، أو 130 أو 133 مرة (لتوسيع الضيق)","ritual":"مركّب (ذكر+سجود)","ritualDetail":"للأغراض الأربعة: يُقرأ الاسم 129 مرة ثم تُقرأ آية مخصصة لكل غرض (رزق/كشف/عقد ألسن/تفريج)؛ وله سجود خاص بعد العصر بدعاء معين","time":"عقيب سنة الوضوء (للذكر 100 مرة المتتابعة وقت السفر أو الشدة) / بعد صلاة العصر ثم السجود (للذكر 1000 مرة ودعاء مخصوص)","freq":"عند الحاجة","certainty":"عدة أعداد بديلة (حسب الغرض)","source":"عيدروس","story":"رواية الإمام الغزالي عن رجل مظلوم محبوس دعا بآية 'إن ربي لطيف لما يشاء' فجاءه شاب ليلاً وأخرجه من سجنه رغم إغلاق الأبواب.","source3note":"يطابق العدد 129 ويؤكده، ويضيف تفصيل المراتب الثلاث (129، 516، 16641) بشكل أوضح من عندنا","source3conflict":false},{"no":32,"name":"الخبير","khasiyya":"الإخبار بكل شيء، الخلاص من سوء الأخلاق","wird":"الإكثار من الذكر","ritual":"ذكر لفظي","ritualDetail":"-","time":"غير محدد","freq":"موسمي (7 أيام)","certainty":"عدد محدد واحد","source":"عيدروس","story":"","source3note":"يطابق: عندنا نفس المعنى (يُقرأ ليُرى ما يُكشف في المنام)","source3conflict":false},{"no":33,"name":"الحليم","khasiyya":"ثبوت الرئاسة ووجود البركة","wird":"-","ritual":"كتابة","ritualDetail":"يُكتب في قرطاس ويُغسل ويُمسح به الآلة/السفينة/الدابة؛ يُكتب على سفرجلة أو تفاحة للمحبة","time":"غير محدد","freq":"عند الحاجة","certainty":"بلا عدد محدد (فعل/كتابة فقط)","source":"عيدروس","story":"قصة إبراهيم عليه السلام: دعا على عاصٍ فهلك، ثم على آخرين فهلكوا، فلما همّ بالدعاء على رابع أُوحي إليه: 'لو أهلكنا كل عبد عصى لما بقي إلا القليل، لكن نمهله فإن تاب قبلناه'.","source3note":"","source3conflict":false},{"no":34,"name":"العظيم","khasiyya":"وجود العز والشفاء من كل مؤلم","wird":"12 مرة (للخائف من السلطان)، أو 3 مرات (للمحموم)","ritual":"مركّب (ذكر+نفث)","ritualDetail":"ينفث على نفسه بعد الذكر؛ يُكتب للمحموم","time":"غير محدد","freq":"عند الحاجة","certainty":"عدة أعداد بديلة (حسب الغرض)","source":"عيدروس+زروق","story":"","source3note":"","source3conflict":false},{"no":35,"name":"الغفور","khasiyya":"دفع الآلام وغفران الذنوب","wird":"3 مرات (للحمى)، أو 3 مرات على ورقة (للهم)","ritual":"كتابة","ritualDetail":"يُكتب للمحموم؛ يُكتب سيد الاستغفار ويُجرَّع لمن صعب عليه الموت؛ يُكتب ويُحمل/يُتمسح به","time":"غير محدد","freq":"عند الحاجة","certainty":"عدة أعداد بديلة (حسب الغرض)","source":"عيدروس","story":"قصة الأعرابي عند الروضة الشريفة: دعا بمنطق المقايسة بين كرم النبي ﷺ وعدل الله، فأُعجب به الأصمعي وأقرّ بحسن سؤاله.","source3note":"","source3conflict":false},{"no":36,"name":"الشكور","khasiyya":"التوسعة والعافية في البدن","wird":"41 مرة","ritual":"كتابة وشرب","ritualDetail":"يُكتب ويُتمسح به ويُشرب منه","time":"غير محدد","freq":"عند الحاجة","certainty":"عدد محدد واحد","source":"عيدروس","story":"قصة داود عليه السلام: سأل كيف يشكر الله وهو لا يستطيع شكره إلا بنعمة ثانية، فأُجيب: 'إذا عرفت ذلك فقد شكرتني'.","source3note":"يطابق تماماً: نفس العدد 41 ونفس الطريقة عندنا","source3conflict":false},{"no":37,"name":"العلي","khasiyya":"الرفع من أسافل الأمور وفتح الغنى","wird":"7000 مرة لقضاء الحوائج، أو 70 مرة (مع لا حول ولا قوة)","ritual":"مركّب (كتابة+تعليق / كتابة+شرب)","ritualDetail":"يُعلَّق على الصغير/الغريب/الفقير؛ يُكتب على كوز للشرب منه في السفر مع قراءة سورة قريش","time":"غير محدد","freq":"عند الحاجة","certainty":"عدة أعداد بديلة (حسب الغرض)","source":"عيدروس","story":"","source3note":"معنى إضافي: إصلاح حال الزميل المسيء أو الجار السيئ، غير وارد عندنا لهذا الاسم تحديداً","source3conflict":false},{"no":38,"name":"الكبير","khasiyya":"فتح باب العلم والمعرفة وإصلاح ذات البين","wird":"1000 مرة يومياً لمدة 7 أيام (للمعزول)، أو 70 مرة (للأمن بين الأقارب)","ritual":"مركّب (ذكر+أكل مشترك)","ritualDetail":"يُقرأ على طعام يأكله الزوجان للصلح","time":"قبل الشمس وبعد الغروب","freq":"يومي / موسمي (7 أيام)","certainty":"عدة أعداد بديلة (حسب الغرض)","source":"عيدروس","story":"إشارة لحديث 'لا يكبر عليكم شيء ما دامت كلمتكم: الله أكبر'.","source3note":"يطابق: عندنا أيضاً 1000 مرة يومياً 7 أيام صائماً للمعزول","source3conflict":false},{"no":39,"name":"الحفيظ","khasiyya":"الحفظ من الضياع والسرقة والسباع","wird":"119 مرة (مع آية)، أو 1135 مرة يومياً حتى تتحقق الحاجة","ritual":"مركّب (حمل/تعليق+ذكر)","ritualDetail":"يُحمل أو يُذكر في مواضع الاحتمال؛ يُكتب ويُوضع في صندوق المال أو السيارة","time":"غير محدد","freq":"عند الحاجة","certainty":"عدة أعداد بديلة (حسب الغرض)","source":"عيدروس","story":"","source3note":"إضافة: ربطه بحفظ العلوم وآية مركبة (الرحمن علم القرآن)، غير وارد عندنا بهذا الشكل","source3conflict":false},{"no":40,"name":"المقيت","khasiyya":"وجود التقوت والقوت، الأمن في السفر","wird":"-","ritual":"مركّب (كتابة+شم / كتابة+شرب)","ritualDetail":"يُكتب على التراب ويُشم؛ يُكتب على كوز للشرب منه مع سورة يس","time":"غير محدد","freq":"عند الحاجة","certainty":"بلا عدد محدد (فعل/كتابة فقط)","source":"عيدروس","story":"ملاحظة تحريرية: هذا الموضع في المصدر الأصلي يحتوي خطأً واضحاً — كُرر فيه نص شرح اسم 'العلي' بدل شرح 'المقيت' الفعلي، يبدو خطأ نسخ/طباعة في الكتاب نفسه.","source3note":"تحذير: هذا الموضع في المصدر الثالث يحتوي خطأ تحريرياً (تكرار نص اسم آخر)","source3conflict":false},{"no":41,"name":"الحسيب","khasiyya":"الأمن بين الأقارب وحفظ الأهل والمال","wird":"77 مرة، أو 7 مرات على الجنين","ritual":"مركّب (ذكر+وضع يد)","ritualDetail":"وضع اليد على رقبة من يُخاف عليه","time":"قبل الطلوع وبعد الغروب","freq":"يومي","certainty":"عدة أعداد بديلة (حسب الغرض)","source":"عيدروس","story":"حوار أعرابي مع النبي ﷺ: سأله من يحاسب الخلق فأجابه 'الله بنفسه'، فضحك الأعرابي وعلّق: 'الكريم إذا قدر عفا وإذا حاسب سامح'.","source3note":"فرق: عندنا 77 مرة قبل الطلوع وبعد الغروب — عدد ومناسبة مختلفان","source3conflict":false},{"no":42,"name":"الجليل","khasiyya":"الظهور وجلالة القدر، إسراع الإجابة","wird":"-","ritual":"كتابة وحمل","ritualDetail":"يُكتب بمسك وزعفران ويُحمل","time":"غير محدد","freq":"عند الحاجة","certainty":"بلا عدد محدد (فعل/كتابة فقط)","source":"عيدروس","story":"المؤلف يصرّح أنه أمسك القلم عن مزيد الفوائد 'حتى لا يحصل الشك عند بعض القراء' — ملاحظة عن منهجه الشخصي في الإيجاز.","source3note":"","source3conflict":false},{"no":43,"name":"الكريم","khasiyya":"وجود الكرم والإكرام","wird":"-","ritual":"ذكر لفظي","ritualDetail":"-","time":"عند النوم","freq":"يومي","certainty":"بلا عدد محدد (فعل/كتابة فقط)","source":"عيدروس","story":"قول ابن عطاء: 'الكريم هو الذي لا تتخطاه الآمال'.","source3note":"","source3conflict":false},{"no":44,"name":"الرقيب","khasiyya":"جمع الضوال والحفظ في الأهل والمال","wird":"7 مرات على الجنين، أو 7 مرات على الرقبة","ritual":"مركّب (ذكر+وضع يد)","ritualDetail":"يُكثر صاحب الضالة من ذكره","time":"غير محدد","freq":"عند الحاجة","certainty":"عدة أعداد بديلة (حسب الغرض)","source":"زروق فقط","story":"قصة الشيخ الذي أعطى تلاميذه طيوراً وأمرهم بذبحها حيث لا يراهم أحد؛ عاد أحدهم بطيره حياً قائلاً: 'لم أجد موضعاً لا يراني الله فيه'.","source3note":"","source3conflict":false},{"no":45,"name":"المجيب","khasiyya":"إسراع الإجابة","wird":"مع الدعاء، أو مواظبة 23 يوماً مع الصوم","ritual":"مركّب (ذكر+صوم)","ritualDetail":"-","time":"مع الدعاء","freq":"موسمي (23 يوماً)","certainty":"عدة أعداد بديلة (حسب الغرض)","source":"زروق فقط","story":"قصة المرأة التي أعطت سائلاً لقمتها فرُزقت غلاماً، ثم لما خطفه الذئب استغاثت فأُرسل ملك لإنقاذه برسالة 'هذه لقمة بلقمة'.","source3note":"","source3conflict":false},{"no":46,"name":"الواسع","khasiyya":"حصول السعة والجاه وسعة الصدر","wird":"-","ritual":"ذكر لفظي","ritualDetail":"-","time":"غير محدد","freq":"عند الحاجة","certainty":"بلا عدد محدد (فعل/كتابة فقط)","source":"عيدروس","story":"ملاحظة منهجية فريدة من المؤلف: يصرّح صراحة أن 'الواسع' ليس من التسعة والتسعين التقليدية، لكنه أضافه لأنه وجده 'أقرب إلى الإجابة'.","source3note":"ملاحظة منهجية فريدة: المؤلف يعترف صراحة أنه يضيف اسماً خارج القائمة التقليدية باجتهاد شخصي","source3conflict":false},{"no":47,"name":"الحكيم","khasiyya":"دفع الدواهي وفتح باب الحكمة","wird":"الإكثار من الذكر","ritual":"ذكر لفظي","ritualDetail":"-","time":"غير محدد","freq":"عند الحاجة","certainty":"عدد محدد واحد","source":"عيدروس","story":"قصة الشيخ أبي الوفا البغدادي الأمّي حين طُلب منه إلقاء درس فاستمهل، وتوجه بقلبه للنبي ﷺ فأُلهم بفتح اسم 'العليم'.","source3note":"","source3conflict":false},{"no":48,"name":"الودود","khasiyya":"ثبوت الود بين الزوجين","wird":"1000 مرة","ritual":"مركّب (ذكر+أكل مشترك)","ritualDetail":"يُقرأ على طعام يأكله الزوجان معاً","time":"غير محدد","freq":"عند الحاجة","certainty":"عدد محدد واحد","source":"عيدروس","story":"","source3note":"","source3conflict":false},{"no":49,"name":"المجيد","khasiyya":"تحصيل الجلالة والمجد والطهارة، الشفاء","wird":"كثيراً عند الإفطار، أو 7 مرات (لتيسير الزواج)","ritual":"مركّب (صوم+ذكر / تعليق)","ritualDetail":"صوم الأبرص أيام البِيض (13-14-15 من كل شهر هجري)؛ يُعلَّق بنية تيسير الزواج","time":"عند الإفطار","freq":"موسمي (3 أيام/شهرياً)","certainty":"عدة أعداد بديلة (حسب الغرض)","source":"عيدروس+زروق","story":"","source3note":"فرق: عدد جديد (171) غير موجود عندنا (عندنا 'كثيراً عند الإفطار' أو 7 مرات للزواج)","source3conflict":false},{"no":50,"name":"الباعث","khasiyya":"بعث عالم الغيب وتنوير القلب","wird":"100 مرة","ritual":"مركّب (ذكر+وضع يد)","ritualDetail":"اليد على الصدر عند النوم","time":"عند النوم","freq":"يومي","certainty":"عدد محدد واحد","source":"عيدروس","story":"","source3note":"يطابق تماماً: نفس العدد والفعل والوقت عندنا","source3conflict":false},{"no":51,"name":"الشهيد","khasiyya":"الرجوع عن الباطل إلى الحق","wird":"1000 مرة","ritual":"مركّب (أخذ شعر+ذكر)","ritualDetail":"يُؤخذ شعر من جبهة الولد العاق سحراً ويُقرأ عليه","time":"سحراً","freq":"عند الحاجة","certainty":"عدد محدد واحد","source":"عيدروس","story":"قصة رجل يُضرب بالسياط دون أن يصيح، فسُئل عن سرّ صبره فقال: 'إنما أضرب لأجل محبوبي وهو حاضر شاهد، عالم بأني أضرب لأجله'.","source3note":"فرق: عدد جديد (319) ووقت محدد (جوف الليل) غير موجودين عندنا (عندنا 1000 مرة بلا وقت محدد)","source3conflict":false},{"no":52,"name":"الحق","khasiyya":"كفاية الهمّ وتيسير الأمور","wird":"الكتابة (سحراً)، أو 100 مرة كل يوم (للاستغناء من الفقر)، أو 1000 مرة كل يوم (لحسن الأخلاق)","ritual":"كتابة","ritualDetail":"يُكتب في كاغد مربع ويُرفع للسماء سحراً","time":"سحراً (للكتابة وحدها) — أما الأذكار اليومية (100 أو 1000 مرة) فبلا وقت محدد داخل اليوم","freq":"يومي","certainty":"عدة أعداد بديلة (حسب الغرض)","source":"عيدروس","story":"","source3note":"يطابق: نفس العدد والصيغة عندنا تماماً","source3conflict":false},{"no":53,"name":"الوكيل","khasiyya":"نفي الحوائج والمصائب","wird":"الإكثار من الذكر","ritual":"مركّب (ذكر+كتابة)","ritualDetail":"يُكتب في كاغد مربع ويُرفع للسماء سحراً","time":"عند الخوف","freq":"عند الحاجة","certainty":"عدد محدد واحد","source":"عيدروس","story":"دعاء منسوب لأحد العارفين: 'اللهم إن قوماً سألوك أن تسخر لهم الخلق فسخرته، أما أنا فأسألك إعوجاج الخلق علي حتى لا يكون لي ملجأ سواك'.","source3note":"","source3conflict":false},{"no":54,"name":"القوي","khasiyya":"ظهور القوة في الوجود","wird":"1000 مرة","ritual":"ذكر لفظي","ritualDetail":"-","time":"غير محدد","freq":"عند الحاجة","certainty":"عدد محدد واحد","source":"عيدروس","story":"","source3note":"فرق بسيط: عندنا 1000 مرة بلا وقت محدد، وهنا 100 مرة بعد الصبح تحديداً","source3conflict":false},{"no":55,"name":"المتين","khasiyya":"ظهور القوة (مع اسم القوي)","wird":"10 مرات","ritual":"ذكر لفظي","ritualDetail":"-","time":"غير محدد","freq":"عند الحاجة","certainty":"عدد محدد واحد","source":"عيدروس","story":"","source3note":"","source3conflict":false},{"no":56,"name":"الولي","khasiyya":"ثبوت الولاية وتيسير الحساب","wird":"1000 مرة","ritual":"ذكر لفظي","ritualDetail":"-","time":"كل ليلة جمعة","freq":"أسبوعي","certainty":"عدد محدد واحد","source":"عيدروس","story":"","source3note":"","source3conflict":false},{"no":57,"name":"الحميد","khasiyya":"اكتساب المحامد في الأخلاق والأفعال","wird":"خلوة 45 يوماً (للترقي في الولاية)","ritual":"ذكر لفظي","ritualDetail":"خلوة تامة 45 يوماً، يُذكر فيها كل يوم ما يقدر عليه","time":"غير محدد","freq":"موسمي (45 يوماً)","certainty":"عدد محدد واحد","source":"عيدروس","story":"","source3note":"","source3conflict":false},{"no":58,"name":"المحصي","khasiyya":"تسخير القلوب","wird":"20 مرة على كل كسرة (20 كسرة)","ritual":"كتابة وأكل","ritualDetail":"يُكتب على كسرات الخبز وتُؤكل","time":"غير محدد","freq":"عند الحاجة","certainty":"عدد محدد واحد","source":"عيدروس","story":"حوار الإمام علي: سُئل كيف يحاسب الله الخلق الكثير وهم لا يرونه؟ فأجاب: 'كما يرزقهم وهم لا يرونه'.","source3note":"","source3conflict":false},{"no":59,"name":"المبدئ","khasiyya":"تثبيت الحمل","wird":"29 مرة، أو 1000 مرة (لإزالة الحيرة)","ritual":"ذكر لفظي","ritualDetail":"يُقرأ على بطن الحامل","time":"سحراً","freq":"عند الحاجة","certainty":"عدة أعداد بديلة (حسب الغرض)","source":"عيدروس+زروق","story":"","source3note":"","source3conflict":false},{"no":60,"name":"المعيد","khasiyya":"تذكار المحفوظ إذا نُسي","wird":"1000 مرة","ritual":"ذكر لفظي","ritualDetail":"يُضاف له اسم المبدئ","time":"غير محدد","freq":"عند الحاجة","certainty":"عدد محدد واحد","source":"عيدروس","story":"","source3note":"يطابق: عندنا أيضاً 1000 مرة لإزالة الحيرة عند 'المعيد'","source3conflict":false},{"no":61,"name":"المحيي","khasiyya":"وجود الألفة","wird":"بعدد (5)","ritual":"كتابة وأكل","ritualDetail":"يُكتب على كسرة خبز وتُؤكل","time":"غير محدد","freq":"عند الحاجة","certainty":"عدد محدد واحد","source":"عيدروس","story":"","source3note":"فرق: عندنا 'بعدد 5 على كسرة' وهنا بلا عدد جوف الليل","source3conflict":false},{"no":62,"name":"المميت","khasiyya":"تطويع النفس على الطاعة","wird":"الإكثار من الذكر","ritual":"ذكر لفظي","ritualDetail":"-","time":"غير محدد","freq":"عند الحاجة","certainty":"عدد محدد واحد","source":"عيدروس","story":"","source3note":"","source3conflict":false},{"no":63,"name":"الحي","khasiyya":"ثبوت الحياة وعدم المرض","wird":"300,000 مرة","ritual":"مركّب (ذكر+كتابة+شرب)","ritualDetail":"يُكتب في إناء بالمسك وماء الورد ويُحلّ بماء السكر ويُشرب 3 أيام","time":"غير محدد","freq":"موسمي (3 أيام)","certainty":"عدد محدد واحد","source":"عيدروس","story":"","source3note":"فرق كبير: عندنا 300,000 مرة! هنا 500 مرة فقط — تعارض رقمي كبير جداً يستحق التوثيق","source3conflict":true},{"no":64,"name":"القيوم","khasiyya":"حصول القيام والقيومية، ذهاب النوم","wird":"بلا عدد محدد (عند العودة للبيت، لأمن التعرض)، أو 16 مرة (للبليد، لتقوية الحفظ)، أو 40 مرة (يا حي يا قيوم، لإحياء القلب)","ritual":"ذكر لفظي","ritualDetail":"الذكر 16 مرة يكون في مكان خالٍ","time":"عند إيوائه إلى بيته (للأمن من التعرض، بلا عدد) / يومياً في مكان خالٍ (للبليد، 16 مرة) / من الفجر إلى طلوع الشمس (بصيغة \"يا حي يا قيوم\" مركّبة) / يومياً 40 مرة (بصيغة \"يا حي يا قيوم لا إله إلا أنت\" لإحياء القلب)","freq":"يومي","certainty":"عدة أعداد بديلة (حسب الغرض)","source":"عيدروس","story":"روايتان: رؤيا أبي علي الكتاني للنبي ﷺ وتعليمه الذكر لإحياء القلب؛ وقصة علي كرم الله وجهه يوم بدر يرى النبي ﷺ ساجداً يكرر 'يا حي يا قيوم' فقط حتى فتح الله النصر.","source3note":"يطابق تقريباً: عندنا 40 مرة (يا حي يا قيوم لا إله إلا أنت) ووقت مشابه (الفجر للشروق)","source3conflict":false},{"no":65,"name":"الواجد","khasiyya":"تقوية القلب","wird":"-","ritual":"ذكر لفظي","ritualDetail":"يُقرأ على كل لقمة طعام","time":"وقت الأكل","freq":"يومي","certainty":"بلا عدد محدد (فعل/كتابة فقط)","source":"عيدروس","story":"","source3note":"","source3conflict":false},{"no":66,"name":"الماجد","khasiyya":"تنوير القلب","wird":"حتى يغلب عليه حال","ritual":"ذكر لفظي","ritualDetail":"-","time":"غير محدد","freq":"عند الحاجة","certainty":"عدد محدد واحد","source":"عيدروس","story":"قول أبي سليمان الخطابي: تكرار 'الماجد' بعد 'المجيد' لتأكيد معنى 'الواجد' (الغني) بمرادفه.","source3note":"","source3conflict":false},{"no":67,"name":"الواحد","khasiyya":"إخراج التعب من القلب","wird":"1000 مرة، أو 500 مرة (للخائف من السلطان)","ritual":"ذكر لفظي","ritualDetail":"-","time":"بعد صلاة الظهر","freq":"عند الحاجة","certainty":"عدة أعداد بديلة (حسب الغرض)","source":"عيدروس","story":"حديث الرجل الذي دعا بصيغة 'اللهم إني أسألك بأنك أنت الواحد الأحد...' فأخبر النبي ﷺ أنه سأل الله باسمه الأعظم.","source3note":"يطابق تماماً: نفس العدد ونفس المعنى عندنا","source3conflict":false},{"no":100,"name":"الأحد","khasiyya":"ظهور عالم القدرة وآثارها","wird":"100 مرة","ritual":"ذكر لفظي","ritualDetail":"في خلوة وطهارة","time":"غير محدد","freq":"عند الحاجة","certainty":"عدد محدد واحد","source":"زروق فقط — غير وارد عند العيدروس","story":"","source3note":"","source3conflict":false},{"no":68,"name":"الصمد","khasiyya":"حصول الخير والصلاح","wird":"125 مرة عند السحر، أو 100 مرة يومياً (3 أيام صوم)، أو 350 مرة يومياً (زروق فقط، لتقوية الإرادة)","ritual":"مركّب (ذكر+صوم / كتابة+سقي)","ritualDetail":"صوم الخميس والجمعة والسبت؛ يُكتب ويُسقى للزوج","time":"السحر","freq":"موسمي (3 أيام) / يومي","certainty":"عدة أعداد بديلة (حسب الغرض)","source":"عيدروس+زروق","story":"حديث 'من أبلغ حاجة من لا يستطيع إبلاغها أمنه الله يوم الفزع الأكبر' وضده 'من احتجب عن أولي الضعف احتجب الله عنه يوم القيامة'.","source3note":"إضافة جديدة بالكامل: عدد ومناسبة غير موجودين عندنا (عندنا 125 أو 100 أو 350)","source3conflict":false},{"no":69,"name":"القادر","khasiyya":"إثارة القوة وقهر الأعداء","wird":"100 مرة بعد ركعتين، أو 7/70/700 مرة (مركّب مع أسماء أخرى)","ritual":"مركّب (ذكر+صلاة ركعتين)","ritualDetail":"-","time":"بعد الوضوء","freq":"عند الحاجة","certainty":"عدة أعداد بديلة (حسب الغرض)","source":"عيدروس","story":"","source3note":"","source3conflict":false},{"no":70,"name":"المقتدر","khasiyya":"وقوع التدبير من الله","wird":"144 مرة","ritual":"ذكر لفظي","ritualDetail":"-","time":"عند الانتباه من النوم","freq":"يومي","certainty":"عدد محدد واحد","source":"عيدروس","story":"","source3note":"يطابق المعنى: عندنا أيضاً عند الانتباه من النوم","source3conflict":false},{"no":71,"name":"المقدم","khasiyya":"القوة في الحرب والنجاة فيه","wird":"-","ritual":"ذكر لفظي","ritualDetail":"-","time":"عند دخول المعركة","freq":"عند الحاجة","certainty":"بلا عدد محدد (فعل/كتابة فقط)","source":"عيدروس","story":"","source3note":"","source3conflict":false},{"no":72,"name":"المؤخر","khasiyya":"التأخر عن كل قبيح","wird":"الإكثار من الذكر","ritual":"ذكر لفظي","ritualDetail":"-","time":"غير محدد","freq":"عند الحاجة","certainty":"عدد محدد واحد","source":"عيدروس","story":"","source3note":"","source3conflict":false},{"no":73,"name":"الأول","khasiyya":"جمع الشمل للمسافر","wird":"1000 مرة (زروق)","ritual":"ذكر لفظي","ritualDetail":"-","time":"كل يوم جمعة","freq":"أسبوعي","certainty":"عدد محدد واحد","source":"عيدروس+زروق","story":"حوار أعرابي مع النبي ﷺ: سأله 'أين كان الله قبل الخلق؟' فأجاب 'كان الله ولا شيء معه'، فسأل 'والآن؟' فأجاب 'وهو الآن على ما كان عليه'.","source3note":"فرق: عندنا 1000 مرة (من زروق) - هنا بلا عدد","source3conflict":false},{"no":74,"name":"الآخر","khasiyya":"صفاء الباطن عما سوى الله","wird":"100 مرة","ritual":"ذكر لفظي","ritualDetail":"-","time":"غير محدد","freq":"يومي","certainty":"عدد محدد واحد","source":"عيدروس","story":"","source3note":"","source3conflict":false},{"no":75,"name":"الظاهر","khasiyya":"إظهار نور الولاية على القلب","wird":"-","ritual":"ذكر لفظي","ritualDetail":"-","time":"عند الإشراق","freq":"يومي","certainty":"بلا عدد محدد (فعل/كتابة فقط)","source":"عيدروس","story":"شرح فلسفي مطوّل عن وحدة الكون كجسد واحد تظهر فيه آثار القدرة، دون قصة محددة.","source3note":"","source3conflict":false},{"no":76,"name":"الباطن","khasiyya":"وجود الأنس","wird":"3 مرات يومياً (كل مرة ساعة)؛ ثم 140 مرة بعد ركعتين (عيدروس) أو 45 مرة (زروق) — تعارض","ritual":"مركّب (ذكر+صلاة ركعتين)","ritualDetail":"-","time":"غير محدد","freq":"يومي","certainty":"متعارض بين المصدرين","source":"عيدروس+زروق (تعارض رقمي)","story":"","source3note":"","source3conflict":false},{"no":77,"name":"الوالي","khasiyya":"دفع الآفات من الصواعق","wird":"-","ritual":"ذكر لفظي","ritualDetail":"-","time":"غير محدد","freq":"عند الحاجة","certainty":"بلا عدد محدد (فعل/كتابة فقط)","source":"عيدروس","story":"","source3note":"","source3conflict":false},{"no":78,"name":"المتعالي","khasiyya":"وجود الرفعة وإصلاح الحال","wird":"1000 مرة يومياً لمدة 7 أيام (لإهلاك العدو)","ritual":"ذكر لفظي","ritualDetail":"تلازمها الحائض في أيام حيضها","time":"غير محدد","freq":"موسمي (7 أيام)","certainty":"عدد محدد واحد","source":"عيدروس","story":"ملاحظة توثيقية: يذكر المؤلف أن إحدى روايات الأربعين الإدريسية وردت بصيغة مدمجة (المتعالي مع المجيب) دون فصل بينهما، خلافاً للرواية التي اعتمدها هو.","source3note":"ملاحظة توثيقية فريدة عن اختلاف روايات الأربعين الإدريسية نفسها — غير موجودة عندنا","source3conflict":false},{"no":79,"name":"البر","khasiyya":"حصول البر في الوجود","wird":"402 مرة (في السفر، مركّب)","ritual":"مركّب (كتابة+قذف)","ritualDetail":"يُكتب في لوح ويُجعل في جوف حوت ويُقذف بالبحر","time":"غير محدد","freq":"عند الحاجة","certainty":"عدد محدد واحد","source":"عيدروس","story":"قصة موسى عليه السلام: رأى رجلاً عند ساق العرش فسأل عن سبب علو منزلته، فقيل: 'لأنه لم يحسد عبداً وكان باراً بوالديه'؛ وقصة إبراهيم عليه السلام والسائل الذي حُرم ثم تبيّن أن الله يرزقه رغم كفره.","source3note":"يطابق الوقت تقريباً (طلوع وغروب) لكن بلا عدد محدد، عندنا عدد مركب 402","source3conflict":false},{"no":80,"name":"التواب","khasiyya":"دفع الظلم وتحقيق التوبة","wird":"63 مرة/الضحى (عيدروس) أو 360 مرة/الصبح (زروق) — تعارض","ritual":"ذكر لفظي","ritualDetail":"-","time":"إثر صلاة الضحى أو الصبح","freq":"يومي","certainty":"متعارض بين المصدرين","source":"عيدروس+زروق (تعارض رقمي)","story":"حديث الطائر الذي أسقط قطعة طين من السقف وصاح، ففسّره النبي ﷺ بقوله: 'كما لا أُكدّر بهذه القطعة البحر، كذلك ذنوب أمتك لا تُغيّر وجه الله'.","source3note":"","source3conflict":false},{"no":81,"name":"المنتقم","khasiyya":"الانتقام من العدو لمن لا يقدر","wird":"-","ritual":"ذكر لفظي","ritualDetail":"-","time":"غير محدد","freq":"عند الحاجة","certainty":"بلا عدد محدد (فعل/كتابة فقط)","source":"عيدروس","story":"قول عمر بن عبد العزيز: 'إذا أمكنك القدرة على المخلوق فاذكر قدرة الله عليك'.","source3note":"","source3conflict":false},{"no":82,"name":"العفو","khasiyya":"فتح باب الرضا","wird":"الإكثار من الذكر","ritual":"ذكر لفظي","ritualDetail":"-","time":"غير محدد","freq":"عند الحاجة","certainty":"عدد محدد واحد","source":"عيدروس","story":"حديث مطوّل عن رجلين بين يدي الله يوم القيامة، أحدهما يطلب مظلمته فيُعرض عليه العفو مقابل قصور في الجنة فيعفو فيُكافأ.","source3note":"","source3conflict":false},{"no":83,"name":"الرؤوف","khasiyya":"إسكان الغضب","wird":"10 مرات (مع 10 صلوات على النبي)","ritual":"ذكر لفظي","ritualDetail":"-","time":"عند الغضب","freq":"عند الحاجة","certainty":"عدد محدد واحد","source":"عيدروس","story":"قصة الإمام أحمد بن حنبل الذي رحل لرجل يروي أحاديث، فوجده يُطعم كلباً قبل أن يلتفت إليه، فأوضح له أنه خشي قطع رجاء الكلب.","source3note":"فرق: عندنا 10 مرات عند الغضب تحديداً — هنا وقت يومي عام (قبل الشروق) بلا عدد ومناسبة مختلفة","source3conflict":false},{"no":84,"name":"مالك الملك","khasiyya":"وجود الإكرام","wird":"المداومة","ritual":"ذكر لفظي","ritualDetail":"-","time":"غير محدد","freq":"يومي","certainty":"عدد محدد واحد","source":"عيدروس","story":"","source3note":"إضافة: عدد جديد (100 مرة يومياً) غير موجود عندنا (عندنا 'المداومة' بلا عدد)","source3conflict":false},{"no":85,"name":"ذو الجلال والإكرام","khasiyya":"وجود العز والكرامة وظهور الجلالة","wird":"700 مرة","ritual":"ذكر لفظي","ritualDetail":"-","time":"غير محدد","freq":"عند الحاجة","certainty":"عدد محدد واحد","source":"عيدروس","story":"","source3note":"فرق: عدد ومدة جديدان (100×7 أيام) غير موجودين عندنا (عندنا 700 مرة مرة واحدة)","source3conflict":false},{"no":86,"name":"المقسط","khasiyya":"نفي الوسواس في العبادة","wird":"المداومة","ritual":"ذكر لفظي","ritualDetail":"-","time":"غير محدد","freq":"يومي","certainty":"عدد محدد واحد","source":"عيدروس","story":"قصة رجل صالح رأى مصلوباً ظلماً فدعا قائلاً 'إن حلمك على الظالمين يضر بالمظلومين'، فرأى في منامه أن المظلوم في أعلى عليين وأن حلم الله على الظالم هو سبب رفعة المظلوم.","source3note":"","source3conflict":false},{"no":87,"name":"الجامع","khasiyya":"الجمع بين المقاصد والأحباب","wird":"-","ritual":"ذكر لفظي","ritualDetail":"دعاء مخصوص منسوب للشاذلي لصاحب الضالة","time":"غير محدد","freq":"عند الحاجة","certainty":"بلا عدد محدد (فعل/كتابة فقط)","source":"عيدروس+زروق","story":"","source3note":"فرق: عدد ومدة جديدان (300×7) غير موجودين عندنا، لكن دعاء صاحب الضالة يطابق ما عندنا من زروق","source3conflict":false},{"no":101,"name":"المعطي","khasiyya":"تحصيل العطاء لما يراد","wird":"غير محدد في النسخة المتاحة","ritual":"ذكر لفظي","ritualDetail":"-","time":"غير محدد","freq":"عند الحاجة","certainty":"بلا عدد محدد (فعل/كتابة فقط)","source":"زروق فقط — غير وارد عند العيدروس","story":"","source3note":"","source3conflict":false},{"no":88,"name":"الغني","khasiyya":"وجود العافية في كل شيء","wird":"-","ritual":"ذكر لفظي","ritualDetail":"-","time":"عند المرض أو البلاء","freq":"عند الحاجة","certainty":"بلا عدد محدد (فعل/كتابة فقط)","source":"عيدروس","story":"حكايتان عن إبليس: أخذ أول دينار ضُرب ووضعه على عينيه قائلاً 'من أحبك فهو عبدي'؛ ولما اخترعت النقود صرخ صرخة عظيمة لأنه وجد وسيلة أقوى لإضلال الناس.","source3note":"","source3conflict":false},{"no":89,"name":"المغني","khasiyya":"وجود الغنى","wird":"1000 مرة يومياً، أو 10,000 مرة (10 جمع متتالية)","ritual":"ذكر لفظي","ritualDetail":"-","time":"كل ليلة جمعة","freq":"يومي / أسبوعي","certainty":"عدة أعداد بديلة (حسب الغرض)","source":"عيدروس","story":"","source3note":"","source3conflict":false},{"no":90,"name":"المانع","khasiyya":"منع ما يخشى","wird":"-","ritual":"ذكر لفظي","ritualDetail":"-","time":"غير محدد","freq":"عند الحاجة","certainty":"بلا عدد محدد (فعل/كتابة فقط)","source":"عيدروس","story":"شرح عن الزهد الحقيقي: أن يمنع الإنسان نفسه من لذة هو قادر عليها، لا أن يُحرم منها قسراً.","source3note":"","source3conflict":false},{"no":91,"name":"الضار","khasiyya":"التقرب من الخلق","wird":"100 مرة","ritual":"ذكر لفظي","ritualDetail":"-","time":"كل ليلة جمعة","freq":"أسبوعي","certainty":"عدد محدد واحد","source":"عيدروس","story":"قصة أبي بكر الصديق: سأل النبي ﷺ عن آية 'من يعمل سوءاً يُجزَ به' فأجابه بأن المرض والهمّ والأذى هي ذلك الجزاء نفسه في الدنيا.","source3note":"","source3conflict":false},{"no":92,"name":"النافع","khasiyya":"محبة الزوجة","wird":"-","ritual":"ذكر لفظي","ritualDetail":"بالقلب حال الجماع","time":"حال الجماع","freq":"عند الحاجة","certainty":"بلا عدد محدد (فعل/كتابة فقط)","source":"عيدروس","story":"قصة موسى عليه السلام وألم ضرسه: أُمر بعشب فسكن الألم، فلما عاوده الألم ووضع العشب ازداد الألم، فعلّمه الله: 'أنا الشافي والمعافي والضار والنافع، قصدتني أولاً فأزلت مرضك، والآن قصدت العشب لا أنا'.","source3note":"","source3conflict":false},{"no":93,"name":"النور","khasiyya":"تنوير قلب ذاكره وجوارحه","wird":"-","ritual":"ذكر لفظي","ritualDetail":"-","time":"عند ظهور الفجر","freq":"يومي","certainty":"بلا عدد محدد (فعل/كتابة فقط)","source":"عيدروس","story":"دعاء مطوّل للمتحير: 'تباركت يا نور الأنوار، نوّر قلبي بنور معرفتك بالله'.","source3note":"","source3conflict":false},{"no":94,"name":"الهادي","khasiyya":"هداية القلوب ورزق التحكيم","wird":"حتى ينقطع النفس","ritual":"مركّب (صلاة+ذكر)","ritualDetail":"ركعتان بالفاتحة وآية الكرسي والإخلاص، ثم الذكر","time":"عند اشتداد الأمر","freq":"عند الحاجة","certainty":"عدد محدد واحد","source":"عيدروس","story":"","source3note":"","source3conflict":false},{"no":95,"name":"البديع","khasiyya":"قضاء الحوائج ودفع الضرر","wird":"70,000 مرة","ritual":"ذكر لفظي","ritualDetail":"-","time":"غير محدد","freq":"عند الحاجة","certainty":"عدد محدد واحد","source":"عيدروس","story":"","source3note":"","source3conflict":false},{"no":96,"name":"الباقي","khasiyya":"التخلص من الضرر والهم","wird":"1000 مرة","ritual":"مركّب (ذكر+وضع يد)","ritualDetail":"وضع اليد على المريض","time":"بين المغرب والعشاء","freq":"عند الحاجة","certainty":"عدد محدد واحد","source":"عيدروس","story":"تأمل عن فناء الدنيا (الشمس تأفل، الورد يذبل، الأمم تزول) في مقابل بقاء الله وحده.","source3note":"","source3conflict":false},{"no":97,"name":"الوارث","khasiyya":"زوال الحيرة","wird":"1000 مرة","ritual":"ذكر لفظي","ritualDetail":"-","time":"بين المغرب والعشاء","freq":"عند الحاجة","certainty":"عدد محدد واحد","source":"عيدروس","story":"","source3note":"يطابق المعنى (التطبيق على الحيرة، بين المغرب والعشاء) لكن هنا أيضاً تطبيق إضافي لطلب الذرية غير موجود عندنا","source3conflict":false},{"no":98,"name":"الرشيد","khasiyya":"قبول العمل","wird":"100 مرة","ritual":"ذكر لفظي","ritualDetail":"-","time":"بعد العشاء","freq":"يومي","certainty":"عدد محدد واحد","source":"عيدروس","story":"قصة موسى عليه السلام وغنمه في وادٍ به ذئاب: تحيّر بين النوم وحراسة الغنم، فأُوحي إليه: 'كن لي كما أريد أكن لك كما تريد'.","source3note":"","source3conflict":false},{"no":99,"name":"الصبور","khasiyya":"دفع البلايا","wird":"100 مرة","ritual":"ذكر لفظي","ritualDetail":"-","time":"قبل طلوع الشمس","freq":"يومي","certainty":"عدد محدد واحد","source":"عيدروس","story":"قصة حاتم الأصم مع الإمام أحمد بن حنبل: سأله عن طريق السلامة من الناس فذكر ثلاثة: العطاء بلا أخذ، قضاء حقوقهم بلا مطالبة، والصبر على أذاهم بلا رد.","source3note":"","source3conflict":false}]</script>
+<script id="data-extra" type="application/json">{"greatestNameViews":[{"no":1,"view":"بسم الله الرحمن الرحيم","holder":"أحد الأقوال المنقولة (دون نسبة محددة في النص)","note":"أول الأقوال الثلاثة التي يذكرها المؤلف دون ترجيح بينها صراحة في هذا الموضع."},{"no":2,"view":"يا حي يا قيوم","holder":"أحد الأقوال المنقولة","note":"القول الثاني؛ وهو نفسه الذكر الذي رواه أبو علي الكتاني عن رؤياه للنبي ﷺ تحت اسم القيوم."},{"no":3,"view":"لا إله إلا أنت سبحانك إني كنت من الظالمين","holder":"دعاء يونس عليه السلام","note":"ورد في تفسير البيضاوي حديثاً: «ما من مكروب يدعو بهذا الدعاء إلا استُجيب له»."},{"no":4,"view":"أحد عشر حرفاً مركّبة: (أهم، سقك، حلع، يص)","holder":"سرّ يضنّ به بعض الشيوخ","note":"يُقال إنها تجميع للعناصر الأربعة: النار والتراب والهواء والماء — طلسم حرفي وليس عبارة لغوية."},{"no":5,"view":"اسم الجلالة «الله» نفسه","holder":"ترجيح المؤلف الشخصي","note":"المؤلف يرجّح هذا القول: يحسب عدد حروف «الله» (الألف + اللام الأولى + اللام الثانية + الهاء) = ١١ حرفاً، فيطابق عدد حروف الاسم الأعظم المزعوم (١١)، ويعتبره «أصح ما اتُّفق عليه»."}],"greatestNameStory":{"title":"قصة ذي النون المصري والباحث عن الاسم الأعظم","text":"رجل من أهل مكة أراد معرفة الاسم الأعظم، فدلّه بحثه على أن ذا النون المصري يعرفه. سافر إليه وخدمه زمناً طويلاً حتى حظي برضاه، فصارحه بحاجته. اختبره ذو النون بأن أرسله بطبق مغطّى إلى صديق له، وأمره ألا يرفع الغطاء. لما حمله الرجل ورآه خفيفاً، فتحه فإذا فأرة تفلت منه، فعاد خائباً. فابتسم الشيخ وقال: «ائتمنتك على فأرة فخنتني، فكيف أأتمنك على اسم الله الأعظم؟»","moral":"العبرة التي يخلص إليها المؤلف: ليس الشأن في معرفة الاسم الأعظم، بل في أن يكون الذاكر نفسه «عين الاسم الأعظم» — أي أن يتجلى أثر الاسم في سلوكه وأمانته، لا في حفظه لفظاً."},"greatestNameClosingNote":"المؤلف يختم بأن الله أخفى الاسم الأعظم في أسمائه كما أخفى ليلة القدر في العشر الأواخر من رمضان، وأن انشغال الناس بالبحث عنه قد يصرفهم عن الأعمال الصالحة الأخرى (تلاوة القرآن، الصلاة على النبي ﷺ، البر والصدقات).","thirteenNames":[{"no":1,"group":"السبعة أصول","name":"لا إله إلا الله","meaning":"لا معبود بحق إلا الله"},{"no":2,"group":"السبعة أصول","name":"الله","meaning":"علم في الذات العلية الواجبة الوجود"},{"no":3,"group":"السبعة أصول","name":"هو","meaning":"حاضر لا يغيب"},{"no":4,"group":"السبعة أصول","name":"حي","meaning":"دائم الحياة"},{"no":5,"group":"السبعة أصول","name":"واحد","meaning":"لا ثاني له"},{"no":6,"group":"السبعة أصول","name":"عزيز","meaning":"لا نظير له"},{"no":7,"group":"السبعة أصول","name":"ودود","meaning":"كثير الود لعباده"},{"no":8,"group":"الستة أصول","name":"حق","meaning":"ثابت لا يتغير"},{"no":9,"group":"الستة أصول","name":"قهار","meaning":"يقهر ولا يُقهر"},{"no":10,"group":"الستة أصول","name":"قيوم","meaning":"قائم بأسباب مخلوقاته"},{"no":11,"group":"الستة أصول","name":"وهاب","meaning":"كثير العطاء"},{"no":12,"group":"الستة أصول","name":"مهيمن","meaning":"مطّلع على أفعال مخلوقاته"},{"no":13,"group":"الستة أصول","name":"باسط","meaning":"يبسط الرزق لمن يشاء من عباده"}],"thirteenNamesNote":"بحسب المصدر، كان سيدي عبد القادر الجيلاني رضي الله عنه يدعو في نهاية ذكر كل اسم بدعاء خاص به، طالباً من الله أن ينقله إلى حالة أعلى، مترقياً مع ذكر بقية الأسماء بالتتابع. هذا ترتيب تصاعدي للذكر وليس مجرد قائمة معاني."}</script>
+<script id="data-daily" type="application/json">{"dailyWirds":[{"time":"السحر (قبل الفجر)","timeOrder":1,"name":"الصمد","count":"125 مرة","note":"تظهر آثار الصدق والصديقية"},{"time":"السحر (قبل الفجر)","timeOrder":1,"name":"الحق","count":"الكتابة","note":"يُكتب في كاغد مربع ويُرفع للسماء"},{"time":"الفجر","timeOrder":2,"name":"الرزاق","count":"10 مرات لكل ناحية","note":"قبل صلاة الفجر، في كل ناحية من البيت"},{"time":"الفجر","timeOrder":2,"name":"الفتاح","count":"71 مرة","note":"إثر صلاة الفجر، اليد على الصدر"},{"time":"الفجر","timeOrder":2,"name":"القيوم","count":"40 مرة (مع الحي)","note":"من الفجر إلى طلوع الشمس"},{"time":"قبل طلوع الشمس","timeOrder":3,"name":"الصبور","count":"100 مرة","note":"لدفع البلايا"},{"time":"قبل طلوع الشمس","timeOrder":3,"name":"التواب","count":"63 أو 360 مرة*","note":"العدد متعارض بين المصدرين، انظر تفاصيله"},{"time":"بعد الصبح","timeOrder":4,"name":"الله","count":"100 مرة","note":"لانكشاف الأسرار والأنوار"},{"time":"بعد الصبح","timeOrder":4,"name":"النور","count":"—","note":"عند ظهور الفجر، لتنوير القلب"},{"time":"صلاة الضحى","timeOrder":5,"name":"الوهاب","count":"المداومة","note":"في سجود صلاة الضحى الأخير"},{"time":"صلاة الضحى","timeOrder":5,"name":"الباسط","count":"10 مرات","note":"أثر صلاة الضحى"},{"time":"الزوال (الظهر)","timeOrder":6,"name":"الملك","count":"100 مرة","note":"لصفاء القلب"},{"time":"الزوال (الظهر)","timeOrder":6,"name":"القدوس","count":"100 مرة","note":"يكون القلب صافياً"},{"time":"بعد كل صلاة (٥ مرات يومياً)","timeOrder":7,"name":"الرحمن","count":"100 مرة","note":"لإخراج الغفلة والنسيان"},{"time":"بعد كل صلاة (٥ مرات يومياً)","timeOrder":7,"name":"العليم","count":"100 مرة","note":"دبر كل صلاة، للكشف الإيماني"},{"time":"بعد المغرب / الغروب","timeOrder":8,"name":"الكبير","count":"1000 مرة (للمعزول)","note":"قبل الشمس وبعد الغروب، لمدة 7 أيام"},{"time":"بعد المغرب / الغروب","timeOrder":8,"name":"الحسيب","count":"77 مرة","note":"قبل الطلوع وبعد الغروب"},{"time":"بعد العشاء","timeOrder":9,"name":"الرشيد","count":"100 مرة","note":"لقبول العمل"},{"time":"عند النوم","timeOrder":10,"name":"الكريم","count":"الإكثار","note":"لإيقاع الإكرام في القلوب"},{"time":"عند النوم","timeOrder":10,"name":"الباعث","count":"100 مرة","note":"اليد على الصدر، لتنوير القلب"},{"time":"عند النوم","timeOrder":10,"name":"المقتدر","count":"144 مرة","note":"عند الانتباه من النوم تحديداً"},{"time":"يوم الجمعة","timeOrder":11,"name":"المغني","count":"10,000 مرة","note":"كل ليلة جمعة، 10 جمع متتالية"},{"time":"بلا وقت محدد (يومي)","timeOrder":12,"name":"الرحيم","count":"100 مرة","note":"—"},{"time":"بلا وقت محدد (يومي)","timeOrder":12,"name":"الجبار","count":"21 مرة","note":"بعد المسبعات العشر، صباحاً ومساءً"},{"time":"بلا وقت محدد (يومي)","timeOrder":12,"name":"الواجد","count":"—","note":"على كل لقمة طعام"},{"time":"بلا وقت محدد (يومي)","timeOrder":12,"name":"الآخر","count":"100 مرة","note":"لصفاء الباطن"},{"time":"بلا وقت محدد (يومي)","timeOrder":12,"name":"الظاهر","count":"—","note":"حتى يظهر عليه حال"},{"time":"بلا وقت محدد (يومي)","timeOrder":12,"name":"الباطن","count":"3 مرات (كل مرة ساعة)","note":"—"},{"time":"بلا وقت محدد (يومي)","timeOrder":12,"name":"مالك الملك","count":"المداومة","note":"—"},{"time":"بلا وقت محدد (يومي)","timeOrder":12,"name":"المقسط","count":"المداومة","note":"لنفي الوسواس في العبادة"}],"dailyNote":"هذا تجميع عملي للأسماء التي وردت بتكرار يومي محدد، مرتبة حسب وقت اليوم تيسيراً للمداومة. الأعداد والأوقات منقولة كما وردت في الجدول الأصلي، وأي علامة (*) تشير لتعارض بين المصدرين موثّق بالتفصيل في صفحة الجدول الرئيسي."}</script>
+<script id="data-purposes" type="application/json">{"purposes":[{"key":"rizq","title":"الرزق وسعة العيش","icon":"coin","names":[9,17,18,22,37,38,40,43,46,52,57,79,84,88,89,95,101]},{"key":"shifa","title":"الشفاء ودفع الآلام","icon":"leaf","names":[1,6,13,14,18,21,31,34,35,36,49,63,88,96]},{"key":"hifz","title":"الحفظ والأمان","icon":"shield","names":[6,7,10,13,24,26,37,38,39,40,41,44,53,77,79]},{"key":"sihr","title":"دفع السحر والحسد","icon":"eye","names":[16,26,31]},{"key":"faraj","title":"تفريج الكروب وقضاء الحوائج","icon":"unlock","names":[1,18,23,31,52,53,69,70,90,95]},{"key":"quwwa","title":"القوة والنصر على الأعداء","icon":"sword","names":[9,16,21,26,54,55,69,70,71,78,80,81,100]},{"key":"qalb","title":"صفاء القلب ونوره وراحته","icon":"spark","names":[1,2,3,4,5,12,19,28,32,35,50,65,66,67,74,75,76,93,97]},{"key":"ilm","title":"العلم والمعرفة وكشف الأسرار","icon":"book","names":[1,8,12,20,29,31,38,47,95]},{"key":"mahabba","title":"المحبة والألفة الزوجية","icon":"heart","names":[11,38,43,48,58,61,87,92]},{"key":"tawba","title":"التوبة والمغفرة والصلاح","icon":"hands","names":[15,35,51,68,72,79,80,82,98]},{"key":"haiba","title":"الهيبة والمنصب والجاه","icon":"crown","names":[4,8,25,33,38,42,46,56,57,78,85,94]},{"key":"ghadab","title":"تهدئة الغضب وضبط النفس","icon":"dove","names":[83,62]},{"key":"safar","title":"السفر والغربة","icon":"compass","names":[37,40,73]},{"key":"dhurriya","title":"الذرية والحمل والإنجاب","icon":"baby","names":[14,59,97]},{"key":"dua","title":"إجابة الدعاء","icon":"moon","names":[27,42,45]},{"key":"hira","title":"زوال الحيرة والتردد","icon":"compass","names":[60,96,97]},{"key":"adl","title":"العدل والقضاء بين الناس","icon":"scale","names":[29,30,86]},{"key":"sabr","title":"الصبر على البلايا والابتلاء","icon":"wheat","names":[99,64]},{"key":"qurb","title":"القرب من الناس والتأثير فيهم","icon":"hands2","names":[91]}],"purposesNote":"هذا تصنيف موضوعي اجتهادي وليس تصنيفاً ذكره أي من المؤلفين الأصليين. بعض الأسماء تظهر تحت أكثر من غرض لأن خاصيتها مركّبة في النص الأصلي. لكل اسم تفاصيله الكاملة (الورد، الطقس، الوقت، التكرار) كما في الجدول الرئيسي.","sihrNote":"ملاحظة بخصوص هذا الغرض تحديداً: المصادر الثلاثة لا تحتوي قسماً مخصصاً صريحاً لـ«السحر والعين» كما هو شائع في بعض كتب التراث الأخرى (لا ذكر لـ«مسحور» أو «إصابة بعين» أو «تنشير» بهذه الألفاظ). الأسماء الثلاثة هنا أُدرجت لصلتها الجزئية الصريحة في النص: «حل المعقود» عند القهار (مصطلح تراثي لفك الربط/السحر)، و«الأمن من الحاسد» عند المذل، و«عقد الألسن» عند اللطيف. هذا الغرض الأصغر حجماً بين كل الأغراض، وهذا انعكاس صادق لمحتوى المصادر لا تقصيراً في البحث."}</script>
+
+<script>
+// ===== حماية أساسية من النسخ (رادعة وليست مطلقة) =====
+document.addEventListener('contextmenu', e => e.preventDefault());
+document.addEventListener('copy', e => e.preventDefault());
+document.addEventListener('cut', e => e.preventDefault());
+document.addEventListener('dragstart', e => e.preventDefault());
+document.addEventListener('keydown', e => {
+  const k = e.key.toLowerCase();
+  if(e.ctrlKey && ['c','u','s','p'].includes(k)) e.preventDefault();
+  if(e.key === 'F12') e.preventDefault();
+  if(e.ctrlKey && e.shiftKey && ['i','j','c'].includes(k)) e.preventDefault();
+});
+
+const DATA = JSON.parse(document.getElementById('data-main').textContent);
+const EXTRA = JSON.parse(document.getElementById('data-extra').textContent);
+const DAILY = JSON.parse(document.getElementById('data-daily').textContent);
+const PURPOSES = JSON.parse(document.getElementById('data-purposes').textContent);
+
+let currentIndex = -1;
+
+function nameFieldsHTML(d){
+  const fields = [
+    ['الورد (العدد)', d.wird],
+    ['نوع الطقس', d.ritual],
+    ['تفاصيل الطقس', d.ritualDetail],
+    ['الوقت المناسب', d.time],
+    ['التكرار', d.freq],
+  ];
+  let html = '';
+  fields.forEach(([label, val]) => {
+    const v = (val && val !== '-') ? val : 'غير مذكور في النص';
+    html += `<div class="field"><div class="field-label">${label}</div><div class="field-value">${v}</div></div>`;
+  });
+
+  html += `<div class="tags">`;
+  if(d.certainty === 'تعارض مُرجَّح بدليل خارجي') html += `<span class="tag good">✓ تعارض مُرجَّح</span>`;
+  else if(d.certainty === 'متعارض بين المصدرين') html += `<span class="tag warn">⚠ متعارض بين المصدرين</span>`;
+  else html += `<span class="tag">${d.certainty}</span>`;
+
+  if(d.source.includes('زروق فقط')) html += `<span class="tag warn">زروق فقط</span>`;
+  else if(d.source.includes('زروق')) html += `<span class="tag">يتضمن زروق</span>`;
+  else html += `<span class="tag">العيدروس</span>`;
+  html += `</div>`;
+
+  if(d.story){
+    html += `<div class="box box-story"><span class="box-title">قصة / موعظة مرتبطة</span>${d.story}</div>`;
+  }
+  if(d.source3note){
+    html += `<div class="box box-compare ${d.source3conflict ? 'conflict' : ''}"><span class="box-title">${d.source3conflict ? '⚠' : 'ℹ'} مقارنة مع مصدر ثالث</span>${d.source3note}</div>`;
+  }
+  return html;
+}
+
+function renderCard(idx){
+  const d = DATA[idx];
+  currentIndex = idx;
+  document.getElementById('listWrap').classList.add('hidden');
+  document.getElementById('pager').classList.remove('hidden');
+  document.getElementById('searchInput').value = '';
+
+  let html = `
+    <div class="card">
+      <div class="back-row"><button id="backToListBtn">← كل الأسماء</button></div>
+      <div class="card-top">
+        <span class="card-name">${d.name}</span>
+        <span class="card-no">رقم ${d.no} من ١٠١</span>
+      </div>
+      <div class="card-khasiyya">${d.khasiyya}</div>
+  `;
+
+  html += nameFieldsHTML(d);
+  html += `</div>`;
+
+  document.getElementById('cardArea').innerHTML = html;
+  document.getElementById('prevBtn').disabled = idx === 0;
+  document.getElementById('nextBtn').disabled = idx === DATA.length - 1;
+  document.getElementById('backToListBtn').addEventListener('click', backToList);
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function backToList(){
+  document.getElementById('cardArea').innerHTML = '';
+  document.getElementById('pager').classList.add('hidden');
+  document.getElementById('listWrap').classList.remove('hidden');
+  document.getElementById('searchInput').value = '';
+  document.querySelector('.list-count').textContent = 'كل الأسماء (١٠١) — اضغط أي اسم لعرض تفاصيله';
+  buildNameGrid(DATA);
+  currentIndex = -1;
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function buildNameGrid(list){
+  const grid = document.getElementById('nameGrid');
+  if(list.length === 0){
+    grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:var(--ink-soft); padding:20px; font-size:13px;">لا نتائج مطابقة</div>`;
+    return;
+  }
+  grid.innerHTML = list.map(d => `
+    <div class="name-chip" data-no="${d.no}">
+      <span class="chip-name">${d.name}</span>
+      <span class="chip-no">#${d.no}</span>
+    </div>
+  `).join('');
+  grid.querySelectorAll('.name-chip').forEach(el => {
+    el.addEventListener('click', () => {
+      const no = parseInt(el.dataset.no);
+      const idx = DATA.findIndex(d => d.no === no);
+      renderCard(idx);
+    });
+  });
+}
+
+function filterGrid(query){
+  const q = query.trim();
+  const listCountEl = document.querySelector('.list-count');
+  if(!q){
+    buildNameGrid(DATA);
+    listCountEl.textContent = 'كل الأسماء (١٠١) — اضغط أي اسم لعرض تفاصيله';
+    return;
+  }
+  const matches = DATA.filter(d => d.name.includes(q) || d.khasiyya.includes(q));
+  buildNameGrid(matches);
+  listCountEl.textContent = `${matches.length} نتيجة لـ"${q}"`;
+}
+
+document.getElementById('searchInput').addEventListener('input', e => filterGrid(e.target.value));
+document.getElementById('prevBtn').addEventListener('click', () => { if(currentIndex > 0) renderCard(currentIndex - 1); });
+document.getElementById('nextBtn').addEventListener('click', () => { if(currentIndex < DATA.length - 1) renderCard(currentIndex + 1); });
+
+buildNameGrid(DATA);
+
+// ===== صفحة الاسم الأعظم =====
+function buildGreatestPage(){
+  const container = document.getElementById('greatestViews');
+  container.innerHTML = EXTRA.greatestNameViews.map(v => `
+    <div class="view-card">
+      <div class="view-title">${v.no}. ${v.view}</div>
+      <div class="view-meta">${v.holder}</div>
+      <div class="view-note">${v.note}</div>
+    </div>
+  `).join('');
+
+  document.getElementById('storyTitle').textContent = EXTRA.greatestNameStory.title;
+  document.getElementById('storyText').textContent = EXTRA.greatestNameStory.text;
+  document.getElementById('storyMoral').textContent = EXTRA.greatestNameStory.moral;
+  document.getElementById('closingNote').textContent = EXTRA.greatestNameClosingNote;
+}
+
+// ===== صفحة الأسماء الثلاثة عشر =====
+function buildThirteenPage(){
+  document.getElementById('thirteenNote').textContent = EXTRA.thirteenNamesNote;
+  document.getElementById('thirteenBody').innerHTML = EXTRA.thirteenNames.map(t => `
+    <tr>
+      <td>${t.no}</td>
+      <td>${t.group}</td>
+      <td style="font-family:'Amiri',serif; font-weight:700; font-size:15px;">${t.name}</td>
+      <td>${t.meaning}</td>
+    </tr>
+  `).join('');
+}
+
+// ===== صفحة الأوراد اليومية =====
+function buildDailyPage(){
+  document.getElementById('dailyNoteText').textContent = DAILY.dailyNote;
+
+  const groups = {};
+  DAILY.dailyWirds.forEach(w => {
+    if(!groups[w.time]) groups[w.time] = { order: w.timeOrder, items: [] };
+    groups[w.time].items.push(w);
+  });
+  const sortedTimes = Object.keys(groups).sort((a,b) => groups[a].order - groups[b].order);
+
+  document.getElementById('dailyList').innerHTML = sortedTimes.map(timeLabel => `
+    <div class="time-group">
+      <div class="time-label">${timeLabel}</div>
+      ${groups[timeLabel].items.map(w => `
+        <div class="wird-row">
+          <span class="wird-name">${w.name}</span>
+          <div class="wird-mid">
+            <div class="wird-count">${w.count}</div>
+            ${w.note && w.note !== '—' ? `<div class="wird-note">${w.note}</div>` : ''}
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+}
+
+// ===== صفحة الأغراض =====
+const ICONS = {
+  coin: '<circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5h3a1.8 1.8 0 0 1 0 3.6h-3a1.8 1.8 0 0 0 0 3.6h3"/>',
+  leaf: '<path d="M5 19c8 0 14-6 14-14 0 0-12-2-14 8-1 4 0 6 0 6Z"/><path d="M5 19c0-4 2-8 6-10"/>',
+  shield: '<path d="M12 3l7 3v6c0 5-3 8-7 9-4-1-7-4-7-9V6Z"/>',
+  eye: '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>',
+  unlock: '<rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 7-2.6"/>',
+  sword: '<path d="M14.5 3.5 20.5 9.5 11 19l-3 1 1-3z"/><path d="M3 21l4.5-4.5"/>',
+  spark: '<path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l2.5 2.5M16.5 16.5 19 19M19 5l-2.5 2.5M7.5 16.5 5 19"/>',
+  book: '<path d="M4 5.5C4 4.7 4.7 4 5.5 4H12v16H5.5A1.5 1.5 0 0 1 4 18.5Z"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H12v16h6.5a1.5 1.5 0 0 0 1.5-1.5Z"/>',
+  heart: '<path d="M12 20s-7-4.5-9.5-9C1 7.8 2.5 4 6.5 4c2 0 3.5 1.2 4.5 2.6C12 5.2 13.5 4 15.5 4 19.5 4 21 7.8 21.5 11c-2.5 4.5-9.5 9-9.5 9Z"/>',
+  hands: '<path d="M7 13V6a2 2 0 0 1 4 0v6M11 12V4a2 2 0 0 1 4 0v8M15 12.5V6a2 2 0 0 1 4 0v8c0 4-3 7-7 7s-7-2-8-5l-1.5-4A1.5 1.5 0 0 1 5 10h0"/>',
+  crown: '<path d="M3 18h18l-1.5-9-4 3-3.5-5-3.5 5-4-3Z"/>',
+  dove: '<path d="M3 14c3-1 5-3 6-6 1 3 3 4 6 4-1 3-4 5-7 5-2 0-4-1-5-3Z"/><circle cx="17" cy="8" r="1"/>',
+  compass: '<circle cx="12" cy="12" r="9"/><path d="m14.5 9.5-2 5-5 2 2-5Z"/>',
+  baby: '<circle cx="12" cy="8" r="4"/><path d="M6 20c0-4 2.5-6 6-6s6 2 6 6"/>',
+  moon: '<path d="M20 14.5A8 8 0 1 1 9.5 4 6.5 6.5 0 0 0 20 14.5Z"/>',
+  scale: '<path d="M12 3v18M5 7h14M5 7l-3 6a3 3 0 0 0 6 0ZM19 7l-3 6a3 3 0 0 0 6 0Z"/>',
+  wheat: '<path d="M12 21V8M9 6c0 2 1.5 3 3 3s3-1 3-3-1.5-3-3-3-3 1-3 3ZM7 10c0 2 2 3 5 3M17 10c0 2-2 3-5 3M5 14c0 2 2.5 3 7 3M19 14c0 2-2.5 3-7 3"/>',
+  hands2: '<path d="M6 12c2-2 5-2 7 0M4 8c3-3 7-3 10 0M9 16c1-1 3-1 4 0M18 6l3 3-7 7-3-1-1-3Z"/>',
+};
+function iconSvg(key){
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${ICONS[key] || ICONS.spark}</svg>`;
+}
+
+function buildPurposesGrid(){
+  document.getElementById('purposesNoteText').textContent = PURPOSES.purposesNote;
+  const grid = document.getElementById('purposeGrid');
+  grid.innerHTML = PURPOSES.purposes.map(p => `
+    <div class="purpose-tile" data-key="${p.key}">
+      <span class="purpose-icon">${iconSvg(p.icon)}</span>
+      <span class="purpose-title">${p.title}</span>
+      <span class="purpose-count">${p.names.length} اسماً</span>
+    </div>
+  `).join('');
+  grid.querySelectorAll('.purpose-tile').forEach(el => {
+    el.addEventListener('click', () => showPurposeDetail(el.dataset.key));
+  });
+}
+
+function showPurposeDetail(key){
+  const p = PURPOSES.purposes.find(x => x.key === key);
+  const names = p.names.map(no => DATA.find(d => d.no === no)).filter(Boolean);
+
+  let html = `
+    <div class="back-row"><button id="backToPurposesBtn">← كل الأغراض</button></div>
+    <div class="purpose-detail-head">
+      <span class="purpose-detail-icon">${iconSvg(p.icon)}</span>
+      <div>
+        <div class="purpose-detail-title">${p.title}</div>
+        <div class="purpose-detail-count">${names.length} اسماً</div>
+      </div>
+    </div>
+  `;
+
+  if(key === 'sihr' && PURPOSES.sihrNote){
+    html += `<div class="box box-compare"><span class="box-title">ℹ ملاحظة</span>${PURPOSES.sihrNote}</div>`;
+  }
+
+  names.forEach(d => {
+    html += `
+      <div class="purpose-name-card">
+        <div class="purpose-name-top">
+          <span class="purpose-name-title">${d.name}</span>
+          <span class="purpose-name-no">رقم ${d.no}</span>
+        </div>
+        <div class="purpose-name-khasiyya">${d.khasiyya}</div>
+        ${nameFieldsHTML(d)}
+      </div>
+    `;
+  });
+
+  document.getElementById('purposeDetailArea').innerHTML = html;
+  document.getElementById('purposesGridArea').classList.add('hidden');
+  document.getElementById('purposeDetailArea').classList.remove('hidden');
+  document.getElementById('backToPurposesBtn').addEventListener('click', backToPurposesGrid);
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function backToPurposesGrid(){
+  document.getElementById('purposeDetailArea').classList.add('hidden');
+  document.getElementById('purposeDetailArea').innerHTML = '';
+  document.getElementById('purposesGridArea').classList.remove('hidden');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+buildGreatestPage();
+buildThirteenPage();
+buildDailyPage();
+buildPurposesGrid();
+
+// ===== تبديل الصفحات =====
+const views = { navTable: 'viewTable', navDaily: 'viewDaily', navPurposes: 'viewPurposes', navGreatest: 'viewGreatest', navThirteen: 'viewThirteen', navAbout: 'viewAbout' };
+Object.keys(views).forEach(btnId => {
+  document.getElementById(btnId).addEventListener('click', () => {
+    Object.values(views).forEach(v => document.getElementById(v).classList.add('hidden'));
+    document.getElementById(views[btnId]).classList.remove('hidden');
+    Object.keys(views).forEach(b => document.getElementById(b).classList.remove('active'));
+    document.getElementById(btnId).classList.add('active');
+    if(btnId === 'navPurposes') backToPurposesGrid();
+    if(btnId === 'navTable') backToList();
+    window.scrollTo({top:0, behavior:'auto'});
+  });
+});
+</script>
+</body>
+</html>
